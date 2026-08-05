@@ -1,16 +1,18 @@
-const CACHE_NAME = 'echo-pwa-v6-png-live';
+const CACHE_NAME = 'echo-pwa-v11-standalone';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg',
-  '/icon-192.png',
-  '/icon-512.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.svg',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS).catch((err) => console.warn('Cache addAll warning:', err));
+    })
   );
   self.skipWaiting();
 });
@@ -28,7 +30,6 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Network-First Strategy to ensure immediate updates are visible
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
@@ -41,7 +42,7 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       })
       .catch(() => {
-        return caches.match(event.request).then((cached) => cached || caches.match('/index.html'));
+        return caches.match(event.request).then((cached) => cached || caches.match('./index.html'));
       })
   );
 });
