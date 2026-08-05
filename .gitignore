@@ -1,0 +1,7 @@
+.vercel
+.dart_tool/
+.idea/
+build/
+*.log
+*.iml
+.flutter-plugins-dependencies
