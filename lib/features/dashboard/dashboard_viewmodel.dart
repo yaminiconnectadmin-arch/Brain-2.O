@@ -77,8 +77,15 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     final greeting = '$greetingTime, $userName.';
 
     final items = await _db.getAllBrainItems();
-    final today = items.where((i) => i.category == TimelineCategory.today).toList();
-    final upcoming = items.where((i) => i.category != TimelineCategory.today && !i.isCompleted).toList();
+    for (var item in items) {
+      if (!item.isCompleted && item.category == TimelineCategory.tomorrow) {
+        final updated = item.copyWith(category: TimelineCategory.today);
+        await _db.updateBrainItem(updated);
+      }
+    }
+    final freshItems = await _db.getAllBrainItems();
+    final today = freshItems.where((i) => i.category == TimelineCategory.today).toList();
+    final upcoming = freshItems.where((i) => i.category != TimelineCategory.today && !i.isCompleted).toList();
 
     state = state.copyWith(
       isLoading: false,

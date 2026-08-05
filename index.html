@@ -929,11 +929,51 @@
       }
     }
 
+    function reevaluateCategories() {
+      if (!state || !state.items) return;
+      const todayISO = new Date().toISOString().split('T')[0];
+
+      const tomorrowObj = new Date();
+      tomorrowObj.setDate(tomorrowObj.getDate() + 1);
+      const tomorrowISO = tomorrowObj.toISOString().split('T')[0];
+
+      state.items.forEach(item => {
+        if (!item.targetDate) {
+          if (item.category === 'today') {
+            item.targetDate = todayISO;
+          } else if (item.category === 'tomorrow') {
+            item.targetDate = todayISO;
+          } else {
+            item.targetDate = tomorrowISO;
+          }
+        }
+
+        if (item.targetDate <= todayISO) {
+          if (item.category !== 'today') {
+            item.category = 'today';
+            item.date = 'Today';
+          }
+        } else if (item.targetDate === tomorrowISO) {
+          if (item.category !== 'tomorrow') {
+            item.category = 'tomorrow';
+            item.date = 'Tomorrow';
+          }
+        }
+      });
+    }
+
     function loadState() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = parsed;
+          reevaluateCategories();
+          return parsed;
+        }
       } catch(e) {}
+      state = defaultState;
+      reevaluateCategories();
       return defaultState;
     }
 
@@ -947,34 +987,31 @@
     function updateDateAndClock() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('liveTime').innerText = timeStr;
+      const liveTimeEl = document.getElementById('liveTime');
+      if (liveTimeEl) liveTimeEl.innerText = timeStr;
 
       const isoToday = now.toISOString().split('T')[0];
       if (state.lastActiveDate && state.lastActiveDate !== isoToday) {
         runMidnightRollover(isoToday);
       } else {
         state.lastActiveDate = isoToday;
+        reevaluateCategories();
         saveState();
       }
     }
 
     function runMidnightRollover(newDateStr) {
+      reevaluateCategories();
+
       state.items = state.items.filter(item => {
-        if (item.category === 'tomorrow' || item.category === 'upcoming' || item.category === 'thisWeek') {
-          return true;
-        }
-        if (!item.completed) {
-          item.category = 'today';
-          item.date = 'Today';
-          return true;
-        }
+        if (!item.completed) return true;
         return false;
       });
 
       state.lastActiveDate = newDateStr;
       saveState();
       render();
-      showToast('✦ Midnight Echo Routine Completed');
+      showToast('✦ Midnight AI Routine: Past Tasks Updated');
     }
 
     setInterval(updateDateAndClock, 5000);
@@ -1013,6 +1050,7 @@
 
     // Render Views
     function render() {
+      reevaluateCategories();
       saveState();
       const container = document.getElementById('mainContent');
       if (state.currentView === 'dashboard') {
@@ -1490,11 +1528,21 @@
         cleanedTitle = rawText;
       }
 
+      // Target Date Calculation
+      let targetDateObj = new Date();
+      if (category === 'tomorrow') {
+        targetDateObj.setDate(targetDateObj.getDate() + 1);
+      } else if (category === 'thisWeek') {
+        targetDateObj.setDate(targetDateObj.getDate() + 3);
+      }
+      const targetDateISO = targetDateObj.toISOString().split('T')[0];
+
       return {
         title: cleanedTitle,
         type: type,
         priority: priority,
         category: category,
+        targetDate: targetDateISO,
         date: dateStr,
         time: time,
         people: people
@@ -1516,6 +1564,7 @@
         type: parsed.type,
         priority: parsed.priority,
         category: parsed.category,
+        targetDate: parsed.targetDate,
         completed: false,
         people: parsed.people,
         date: parsed.date,

@@ -13,10 +13,10 @@ class MidnightRoutineService {
     final completedItems = allItems.where((item) => item.isCompleted).toList();
     final pendingItems = allItems.where((item) => !item.isCompleted).toList();
 
-    // 2. Automatically reschedule uncompleted tasks to Tomorrow / Timeline
+    // 2. Automatically promote 'tomorrow' / upcoming tasks to 'today' as a new day starts
     for (var item in pendingItems) {
-      if (item.category == TimelineCategory.today) {
-        final updated = item.copyWith(category: TimelineCategory.tomorrow);
+      if (item.category == TimelineCategory.tomorrow) {
+        final updated = item.copyWith(category: TimelineCategory.today);
         await _db.updateBrainItem(updated);
       }
     }
