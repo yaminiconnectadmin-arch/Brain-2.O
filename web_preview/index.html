@@ -629,6 +629,144 @@
       to { transform: translate(-50%, 0); opacity: 1; }
     }
 
+    /* Smart AI Calendar Styles */
+    .calendar-card {
+      background: var(--card-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 18px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(20px);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .calendar-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .calendar-nav-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .calendar-nav-btn:hover {
+      background: var(--cyan);
+      color: #0c0e17;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .calendar-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .cal-day-cell {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 2px 4px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cal-day-cell:hover {
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .cal-day-cell.other-month {
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .cal-day-cell.today {
+      border: 1.5px solid var(--cyan);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+    }
+
+    .cal-day-cell.selected {
+      background: var(--gradient-echo) !important;
+      border-color: transparent !important;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5);
+    }
+
+    .cal-day-cell.selected .cal-day-number {
+      color: #ffffff !important;
+      font-weight: 900;
+    }
+
+    .cal-day-number {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Heatmap Load Badges */
+    .load-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-bottom: 2px;
+    }
+
+    .load-light {
+      background: #30d158;
+      box-shadow: 0 0 8px #30d158;
+    }
+
+    .load-medium {
+      background: #ff9f0a;
+      box-shadow: 0 0 8px #ff9f0a;
+    }
+
+    .load-heavy {
+      background: #ff453a;
+      box-shadow: 0 0 10px #ff453a;
+      animation: busyPulse 1.2s infinite alternate;
+    }
+
+    @keyframes busyPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.3); }
+    }
+
     .echo-footer-tagline {
       font-size: 9px;
       letter-spacing: 2px;
@@ -696,6 +834,7 @@
 
       <div class="header-actions">
         <button class="header-btn" id="installHeaderBtn" onclick="openInstallModal()" title="Download / Install App">📲</button>
+        <button class="header-btn" onclick="switchView('calendar')" title="Smart AI Calendar">📅</button>
         <button class="header-btn" onclick="switchView('search')" title="AI Search">🔍</button>
         <button class="header-btn" onclick="switchView('night')" title="Night Review">🌙</button>
       </div>
@@ -705,6 +844,7 @@
     <div class="nav-tabs">
       <button class="tab-btn active" id="tab-dashboard" onclick="switchView('dashboard')">Dashboard</button>
       <button class="tab-btn" id="tab-timeline" onclick="switchView('timeline')">Timeline</button>
+      <button class="tab-btn" id="tab-calendar" onclick="switchView('calendar')">Calendar</button>
       <button class="tab-btn" id="tab-night" onclick="switchView('night')">Night Review</button>
     </div>
 
@@ -1123,6 +1263,8 @@
         renderDashboard(container);
       } else if (state.currentView === 'timeline') {
         renderTimeline(container);
+      } else if (state.currentView === 'calendar') {
+        renderCalendar(container);
       } else if (state.currentView === 'night') {
         renderNightReview(container);
       } else if (state.currentView === 'search') {
@@ -1353,6 +1495,187 @@
     function setTimelineFilter(cat) {
       state.timelineFilter = cat;
       renderTimeline(document.getElementById('mainContent'));
+    }
+
+    let currentCalendarYear = new Date().getFullYear();
+    let currentCalendarMonth = new Date().getMonth();
+    let selectedCalendarISO = new Date().toISOString().split('T')[0];
+
+    function renderCalendar(container) {
+      reevaluateCategories();
+
+      const todayISO = new Date().toISOString().split('T')[0];
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const currentMonthName = monthNames[currentCalendarMonth];
+
+      const firstDayOfMonth = new Date(currentCalendarYear, currentCalendarMonth, 1);
+      const startingDayOfWeek = firstDayOfMonth.getDay();
+      const daysInMonth = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
+      const daysInPrevMonth = new Date(currentCalendarYear, currentCalendarMonth, 0).getDate();
+
+      const scheduleDensity = {};
+      state.items.forEach(item => {
+        if (!item.completed && item.targetDate) {
+          scheduleDensity[item.targetDate] = (scheduleDensity[item.targetDate] || 0) + 1;
+        }
+      });
+
+      let cellsHTML = '';
+
+      for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+        const d = daysInPrevMonth - i;
+        cellsHTML += `<div class="cal-day-cell other-month"><span class="cal-day-number">${d}</span></div>`;
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const monthPad = String(currentCalendarMonth + 1).padStart(2, '0');
+        const dayPad = String(day).padStart(2, '0');
+        const dateISO = `${currentCalendarYear}-${monthPad}-${dayPad}`;
+
+        const isToday = (dateISO === todayISO);
+        const isSelected = (dateISO === selectedCalendarISO);
+
+        const count = scheduleDensity[dateISO] || 0;
+        let loadBadge = '';
+        if (count === 1) {
+          loadBadge = `<div class="load-indicator load-light" title="1 Task • Light Load"></div>`;
+        } else if (count >= 2 && count <= 3) {
+          loadBadge = `<div class="load-indicator load-medium" title="${count} Tasks • Moderate Load"></div>`;
+        } else if (count >= 4) {
+          loadBadge = `<div class="load-indicator load-heavy" title="${count} Tasks • Heavy Busy Schedule"></div>`;
+        }
+
+        cellsHTML += `
+          <div class="cal-day-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="selectCalendarDate('${dateISO}')">
+            <span class="cal-day-number">${day}</span>
+            ${loadBadge}
+          </div>
+        `;
+      }
+
+      const selectedDateObj = new Date(selectedCalendarISO + 'T00:00:00');
+      const selectedDateStr = selectedDateObj.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      const dayTasks = state.items.filter(i => i.targetDate === selectedCalendarISO);
+      const dayCount = dayTasks.length;
+
+      let workloadStatus = '🟢 Light Focus Day';
+      let workloadColor = 'var(--priority-low)';
+      if (dayCount >= 4) {
+        workloadStatus = '🔴 Heavy / Busy Schedule';
+        workloadColor = 'var(--priority-high)';
+      } else if (dayCount >= 2) {
+        workloadStatus = '🟡 Moderate Schedule';
+        workloadColor = 'var(--priority-med)';
+      }
+
+      container.innerHTML = `
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <div>
+              <div class="calendar-title">${currentMonthName} ${currentCalendarYear}</div>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">AI Schedule Density & Heatmap</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="calendar-nav-btn" onclick="prevCalendarMonth()">‹</button>
+              <button class="calendar-nav-btn" onclick="nextCalendarMonth()">›</button>
+              <button class="tab-btn active" style="padding:4px 10px; font-size:11px; border-radius:10px;" onclick="jumpToCalendarToday()">Today</button>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:12px; font-size:10px; color:var(--text-secondary); margin-bottom:12px; justify-content:center;">
+            <span style="display:flex; align-items:center; gap:4px;"><span class="load-indicator load-light"></span> Light (1)</span>
+            <span style="display:flex; align-items:center; gap:4px;"><span class="load-indicator load-medium"></span> Moderate (2-3)</span>
+            <span style="display:flex; align-items:center; gap:4px;"><span class="load-indicator load-heavy"></span> Busy (4+)</span>
+          </div>
+
+          <div class="calendar-weekdays">
+            <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+          </div>
+
+          <div class="calendar-days-grid">
+            ${cellsHTML}
+          </div>
+        </div>
+
+        <div class="section-title">
+          <span>📅 ${selectedDateStr}</span>
+          <span style="font-size:11px; font-weight:700; color:${workloadColor};">${workloadStatus}</span>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <button class="tab-btn active" style="width:100%; padding:10px; font-size:12px; font-weight:800; border-radius:14px;" onclick="addQuickTaskForDate('${selectedCalendarISO}')">
+            + Add Task for ${selectedDateObj.toLocaleDateString([], { month: 'short', day: 'numeric' })}
+          </button>
+        </div>
+
+        ${dayTasks.length === 0 ? `
+          <div class="glass-card" style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">
+            No tasks or meetings scheduled for this date. Clear focus time ahead.
+          </div>
+        ` : dayTasks.map(item => `
+          <div class="glass-card">
+            <div class="task-item">
+              <div class="task-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleTask(${item.id})">
+                ${item.completed ? '✓' : ''}
+              </div>
+              <div class="task-content" onclick="toggleTask(${item.id})">
+                <div class="task-title ${item.completed ? 'completed' : ''}">${item.title}</div>
+                <div class="task-meta">
+                  ${item.type === 'meeting' ? '📅 Meeting • ' : ''}
+                  ${item.people.length ? '👤 ' + item.people.join(', ') + ' • ' : ''}
+                  ${item.time ? '🕒 ' + item.time : 'Scheduled'}
+                </div>
+              </div>
+              ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
+              <span class="priority-badge priority-${item.priority}">${item.priority}</span>
+              <button class="delete-btn" onclick="deleteTask(${item.id})">✕</button>
+            </div>
+          </div>
+        `).join('')}
+
+        <div class="echo-footer-tagline">SMART CALENDAR. PERFECT TIMING.</div>
+      `;
+    }
+
+    function selectCalendarDate(dateISO) {
+      selectedCalendarISO = dateISO;
+      renderCalendar(document.getElementById('mainContent'));
+    }
+
+    function prevCalendarMonth() {
+      currentCalendarMonth--;
+      if (currentCalendarMonth < 0) {
+        currentCalendarMonth = 11;
+        currentCalendarYear--;
+      }
+      renderCalendar(document.getElementById('mainContent'));
+    }
+
+    function nextCalendarMonth() {
+      currentCalendarMonth++;
+      if (currentCalendarMonth > 11) {
+        currentCalendarMonth = 0;
+        currentCalendarYear++;
+      }
+      renderCalendar(document.getElementById('mainContent'));
+    }
+
+    function jumpToCalendarToday() {
+      const now = new Date();
+      currentCalendarYear = now.getFullYear();
+      currentCalendarMonth = now.getMonth();
+      selectedCalendarISO = now.toISOString().split('T')[0];
+      renderCalendar(document.getElementById('mainContent'));
+    }
+
+    function addQuickTaskForDate(dateISO) {
+      openRecordModal();
+      const dObj = new Date(dateISO + 'T00:00:00');
+      const dateStr = dObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      const input = document.getElementById('voiceTextInput');
+      if (input) {
+        input.value = `Task for ${dateStr} at 10:00 AM: `;
+      }
     }
 
     function renderNightReview(container) {
