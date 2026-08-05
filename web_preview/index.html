@@ -574,8 +574,18 @@
       width: 4px;
       background: var(--gradient-echo);
       border-radius: 4px;
-      height: 10px;
+      height: 12px;
       transition: height 0.12s ease;
+    }
+
+    .wave-bar.active {
+      animation: wavePulse 0.5s infinite alternate cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    @keyframes wavePulse {
+      0% { height: 6px; opacity: 0.6; }
+      50% { height: 36px; opacity: 1; }
+      100% { height: 12px; opacity: 0.7; }
     }
 
     .voice-textarea {
@@ -1021,32 +1031,49 @@
     let recognition = null;
     let isRecordingSpeech = false;
 
-    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
+    function initSpeechRecognition() {
+      if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
 
-      recognition.onresult = (event) => {
-        let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
-        }
-        if (transcript) {
-          document.getElementById('voiceTextInput').value = transcript;
-        }
-      };
+        recognition.onresult = (event) => {
+          let transcript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+          }
+          if (transcript) {
+            const input = document.getElementById('voiceTextInput');
+            if (input) input.value = transcript;
+          }
+        };
 
-      recognition.onerror = () => {
-        document.getElementById('recordStatusText').innerText = 'Microphone active • Type or speak into device';
-      };
+        recognition.onerror = (event) => {
+          console.warn('Speech recognition error:', event.error);
+          isRecordingSpeech = false;
+          updateMicUI();
+          const text = document.getElementById('recordStatusText');
+          if (text) {
+            if (event.error === 'not-allowed') {
+              text.innerText = '⚠️ Mic access denied. Allow mic permissions or type your task above.';
+            } else if (event.error === 'no-speech') {
+              text.innerText = '🎙️ Listening... Speak into your microphone or type above.';
+            } else {
+              text.innerText = `⚠️ Mic status: ${event.error}. You can also type your task above.`;
+            }
+          }
+        };
 
-      recognition.onend = () => {
-        isRecordingSpeech = false;
-        updateMicUI();
-      };
+        recognition.onend = () => {
+          isRecordingSpeech = false;
+          updateMicUI();
+        };
+      }
     }
+
+    initSpeechRecognition();
 
     // Render Views
     function render() {
@@ -1375,49 +1402,80 @@
     }
 
     function openRecordModal() {
-      document.getElementById('recordModal').style.display = 'flex';
-      document.getElementById('voiceTextInput').value = '';
+      const modal = document.getElementById('recordModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.remove('closing');
+      }
+      const input = document.getElementById('voiceTextInput');
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 100);
+      }
       animateWaveform();
       startSpeechRecognition();
     }
 
     function startSpeechRecognition() {
-      if (recognition && !isRecordingSpeech) {
-        try {
-          recognition.start();
-          isRecordingSpeech = true;
-          updateMicUI();
-        } catch(e) {}
+      if (!recognition) {
+        const text = document.getElementById('recordStatusText');
+        if (text) text.innerText = '💡 Web Speech API not supported in this browser. Type your task above!';
+        return;
+      }
+
+      if (isRecordingSpeech) return;
+
+      try {
+        recognition.start();
+        isRecordingSpeech = true;
+        updateMicUI();
+      } catch(e) {
+        console.warn('Speech start error:', e);
+        try { recognition.stop(); } catch(err) {}
+        isRecordingSpeech = false;
+        updateMicUI();
       }
     }
 
     function toggleSpeechRecording() {
       if (isRecordingSpeech) {
-        if (recognition) recognition.stop();
+        if (recognition) {
+          try { recognition.stop(); } catch(e) {}
+        }
         isRecordingSpeech = false;
+        updateMicUI();
       } else {
         startSpeechRecognition();
       }
-      updateMicUI();
     }
 
     function updateMicUI() {
       const btn = document.getElementById('stopRecordBtn');
       const text = document.getElementById('recordStatusText');
+      const wf = document.getElementById('waveform');
+
       if (isRecordingSpeech) {
-        btn.classList.add('recording');
-        text.innerText = 'Echo listening live... Speak now!';
+        if (btn) btn.classList.add('recording');
+        if (text) text.innerText = 'Echo listening live... Speak now or edit text!';
+        if (wf) {
+          wf.querySelectorAll('.wave-bar').forEach(bar => bar.classList.add('active'));
+        }
       } else {
-        btn.classList.remove('recording');
-        text.innerText = 'Microphone paused • Edit text or tap Mic to record';
+        if (btn) btn.classList.remove('recording');
+        if (text) text.innerText = recognition ? 'Microphone paused • Edit text or tap Mic to record' : 'Type your task above and tap Add to Task';
+        if (wf) {
+          wf.querySelectorAll('.wave-bar').forEach(bar => bar.classList.remove('active'));
+        }
       }
     }
 
     function animateWaveform() {
       const wf = document.getElementById('waveform');
-      wf.innerHTML = Array.from({length: 16}).map(() => `
-        <div class="wave-bar" style="height: ${Math.floor(Math.random() * 28 + 6)}px"></div>
-      `).join('');
+      if (wf) {
+        wf.innerHTML = Array.from({length: 16}).map((_, i) => `
+          <div class="wave-bar ${isRecordingSpeech ? 'active' : ''}" style="animation-delay: ${(i * 0.07).toFixed(2)}s; height: ${Math.floor(Math.random() * 20 + 8)}px;"></div>
+        `).join('');
+      }
     }
 
     // Natural Language AI Extraction, Time Parser & Title Cleaner
