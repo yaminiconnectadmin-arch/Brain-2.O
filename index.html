@@ -912,11 +912,11 @@
       ]
     };
 
-    let state = loadState();
+    var state = JSON.parse(JSON.stringify(defaultState));
 
     function getGreeting() {
       const hour = new Date().getHours();
-      const userName = state.userName || 'Yamini';
+      const userName = (state && state.userName) ? state.userName : 'Yamini';
       if (hour >= 5 && hour < 12) {
         return `Good Morning, ${userName}.`;
       } else if (hour >= 12 && hour < 17) {
@@ -929,7 +929,7 @@
     }
 
     function editUserName() {
-      const current = state.userName || 'Yamini';
+      const current = (state && state.userName) ? state.userName : 'Yamini';
       const name = prompt("Enter your name for AI Greeting:", current);
       if (name && name.trim()) {
         state.userName = name.trim();
@@ -979,13 +979,15 @@
           const parsed = JSON.parse(saved);
           state = parsed;
           reevaluateCategories();
-          return parsed;
+          return state;
         }
       } catch(e) {}
-      state = defaultState;
+      state = JSON.parse(JSON.stringify(defaultState));
       reevaluateCategories();
-      return defaultState;
+      return state;
     }
+
+    loadState();
 
     function saveState() {
       try {
@@ -1410,7 +1412,9 @@
       const input = document.getElementById('voiceTextInput');
       if (input) {
         input.value = '';
-        setTimeout(() => input.focus(), 100);
+        setTimeout(() => {
+          if (input && typeof input.focus === 'function') input.focus();
+        }, 100);
       }
       animateWaveform();
       startSpeechRecognition();
