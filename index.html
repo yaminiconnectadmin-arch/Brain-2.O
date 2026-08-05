@@ -17,20 +17,23 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg-dark: #06070b;
       --surface-dark: #0c0e17;
-      --card-dark: rgba(18, 22, 35, 0.75);
-      --card-border: rgba(56, 189, 248, 0.14);
+      --card-dark: rgba(18, 22, 35, 0.78);
+      --card-border: rgba(56, 189, 248, 0.16);
       --card-border-glow: rgba(168, 85, 247, 0.38);
       
       --cyan: #38bdf8;
       --indigo: #6366f1;
       --purple: #a855f7;
       --magenta: #ec4899;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
 
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
@@ -40,8 +43,9 @@
       --priority-med: #ff9f0a;
       --priority-low: #30d158;
 
-      --gradient-echo: linear-gradient(135deg, #38bdf8 0%, #6366f1 45%, #a855f7 80%, #ec4899 100%);
-      --gradient-glow: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15), transparent 70%);
+      --gradient-echo: linear-gradient(135deg, #38bdf8 0%, #6366f1 40%, #a855f7 75%, #ec4899 100%);
+      --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+      --gradient-glow: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.18), transparent 70%);
     }
 
     * {
@@ -67,12 +71,26 @@
       padding: 0;
     }
 
+    .ambient-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
     .app-frame {
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
       height: 100vh;
       height: 100dvh;
-      max-height: 900px;
+      max-height: 940px;
       background: var(--surface-dark);
       border-radius: 0;
       border: none;
@@ -81,83 +99,30 @@
       position: relative;
       overflow: hidden;
       box-shadow: none;
+      z-index: 1;
     }
 
-    @media (min-width: 480px) {
+    @media (min-width: 500px) {
       body {
-        padding: 12px;
+        padding: 16px;
       }
       .app-frame {
-        border-radius: 44px;
+        border-radius: 40px;
         border: 1px solid var(--card-border);
-        box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.9), 0 0 50px rgba(56, 189, 248, 0.12);
-        height: 890px;
+        box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.9), 0 0 60px rgba(56, 189, 248, 0.15);
+        height: 900px;
       }
-    }
-
-    .pwa-install-banner {
-      background: var(--gradient-echo);
-      color: #fff;
-      padding: 10px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 600;
-      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.3);
-      z-index: 20;
-      transition: all 0.3s ease;
-    }
-
-    .pwa-install-banner.hidden {
-      display: none !important;
-    }
-
-    /* Automatically hide all download/install options when running as an installed standalone PWA app */
-    @media all and (display-mode: standalone) {
-      .pwa-install-banner,
-      #pwaBanner,
-      #installHeaderBtn,
-      .install-btn-banner {
-        display: none !important;
-      }
-    }
-
-    .install-btn-banner {
-      background: #ffffff;
-      color: #0c0e17;
-      border: none;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      transition: transform 0.2s ease;
-    }
-
-    .install-btn-banner:hover {
-      transform: scale(1.05);
-    }
-
-    .status-bar {
-      padding: 12px 24px 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      letter-spacing: 0.5px;
-      user-select: none;
-      padding-top: max(12px, env(safe-area-inset-top));
     }
 
     .header {
-      padding: 12px 20px 8px;
+      padding: 16px 20px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: rgba(12, 14, 23, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .brand-container {
@@ -167,8 +132,8 @@
     }
 
     .logo-icon-svg {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
       animation: pulseGlow 3s infinite alternate ease-in-out;
     }
@@ -180,7 +145,7 @@
 
     .brand-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: lowercase;
@@ -206,11 +171,11 @@
       background: var(--card-dark);
       border: 1px solid var(--card-border);
       color: var(--text-primary);
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -225,141 +190,185 @@
 
     .nav-tabs {
       display: flex;
-      padding: 4px 18px;
-      gap: 8px;
-      margin-bottom: 8px;
+      padding: 8px 16px;
+      gap: 6px;
+      background: rgba(12, 14, 23, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none;
     }
 
     .tab-btn {
       flex: 1;
-      padding: 11px 8px;
-      border-radius: 14px;
+      min-width: 68px;
+      padding: 8px 10px;
+      border-radius: 12px;
       background: var(--card-dark);
       border: 1px solid var(--card-border);
       color: var(--text-secondary);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       text-align: center;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
     }
 
     .tab-btn.active {
       background: var(--gradient-echo);
       color: #ffffff;
       border-color: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+      font-weight: 800;
     }
 
     .content-area {
       flex: 1;
       overflow-y: auto;
-      padding: 8px 18px 120px;
-      scrollbar-width: none;
-      animation: viewSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes viewSlideIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .content-area::-webkit-scrollbar {
-      display: none;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
     }
 
     .glass-card {
       background: var(--card-dark);
       border: 1px solid var(--card-border);
-      border-radius: 22px;
-      padding: 16px 18px;
-      margin-bottom: 12px;
-      backdrop-filter: blur(20px);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 20px;
+      padding: 16px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
       position: relative;
       overflow: hidden;
     }
 
-    .glass-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+    .glass-card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
     }
 
-    .glass-card:hover {
-      border-color: var(--card-border-glow);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(168, 85, 247, 0.1);
+    .quick-input-card {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(99, 102, 241, 0.12));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 12px 14px;
+      border-radius: 18px;
+    }
+
+    .quick-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .quick-input-field {
+      flex: 1;
+      background: rgba(6, 7, 11, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .quick-input-field:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+
+    .quick-add-btn {
+      background: var(--gradient-echo);
+      border: none;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.2s ease;
+    }
+
+    .quick-add-btn:active {
+      transform: scale(0.96);
     }
 
     .mission-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 1.5px;
       color: var(--cyan);
-      margin-bottom: 6px;
       text-transform: uppercase;
+      margin-bottom: 4px;
     }
 
     .mission-text {
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 13px;
       color: var(--text-primary);
-      font-weight: 400;
+      line-height: 1.4;
+      font-weight: 500;
     }
 
     .section-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      margin: 18px 0 10px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: 6px;
     }
 
     .task-item {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .task-checkbox {
-      width: 24px;
-      height: 24px;
-      border-radius: 8px;
-      border: 1.5px solid var(--text-muted);
-      cursor: pointer;
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 2px solid var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      transition: all 0.2s ease;
       flex-shrink: 0;
     }
 
     .task-checkbox.checked {
-      background: var(--gradient-echo);
-      border-color: transparent;
-      color: #fff;
-      transform: scale(1.08);
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #000;
+      font-weight: 900;
+      font-size: 13px;
     }
 
     .task-content {
       flex: 1;
+      cursor: pointer;
       min-width: 0;
     }
 
     .task-title {
       font-size: 14px;
       font-weight: 600;
-      line-height: 1.4;
+      color: var(--text-primary);
+      transition: color 0.2s ease, text-decoration 0.2s ease;
       word-break: break-word;
-      transition: color 0.2s;
     }
 
     .task-title.completed {
@@ -370,40 +379,15 @@
     .task-meta {
       font-size: 11px;
       color: var(--text-secondary);
-      margin-top: 4px;
+      margin-top: 3px;
       display: flex;
-      gap: 8px;
       align-items: center;
-    }
-
-    .time-badge {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--cyan);
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 2px 7px;
-      border-radius: 6px;
-    }
-
-    .delete-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 16px;
-      padding: 6px;
-      opacity: 0.5;
-      transition: opacity 0.2s, color 0.2s;
-    }
-
-    .delete-btn:hover {
-      color: var(--mic-red);
-      opacity: 1;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
     .priority-badge {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 800;
       padding: 3px 8px;
       border-radius: 8px;
@@ -412,231 +396,225 @@
       flex-shrink: 0;
     }
 
-    .priority-high { background: rgba(255, 69, 58, 0.15); color: var(--priority-high); border: 1px solid rgba(255, 69, 58, 0.3); }
-    .priority-med { background: rgba(255, 159, 10, 0.15); color: var(--priority-med); border: 1px solid rgba(255, 159, 10, 0.3); }
-    .priority-low { background: rgba(48, 209, 88, 0.15); color: var(--priority-low); border: 1px solid rgba(48, 209, 88, 0.3); }
-
-    .timeline-chips {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      scrollbar-width: none;
+    .priority-high {
+      background: rgba(255, 69, 58, 0.18);
+      color: var(--priority-high);
+      border: 1px solid rgba(255, 69, 58, 0.35);
     }
 
-    .chip-btn {
-      padding: 6px 14px;
-      border-radius: 12px;
-      background: var(--card-dark);
-      border: 1px solid var(--card-border);
-      color: var(--text-secondary);
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: all 0.2s;
+    .priority-med {
+      background: rgba(255, 159, 10, 0.18);
+      color: var(--priority-med);
+      border: 1px solid rgba(255, 159, 10, 0.35);
     }
 
-    .chip-btn.active {
-      background: var(--cyan);
-      color: #0c0e17;
-      border-color: var(--cyan);
-      font-weight: 800;
+    .priority-low {
+      background: rgba(48, 209, 88, 0.18);
+      color: var(--priority-low);
+      border: 1px solid rgba(48, 209, 88, 0.35);
     }
 
-    .bottom-mic-container {
-      position: absolute;
-      bottom: max(22px, env(safe-area-inset-bottom));
-      left: 0;
-      right: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      pointer-events: none;
-      z-index: 10;
+    .time-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 3px 8px;
+      border-radius: 8px;
+      flex-shrink: 0;
     }
 
-    .mic-button {
-      pointer-events: auto;
-      width: 78px;
-      height: 78px;
-      border-radius: 50%;
-      background: var(--gradient-echo);
+    .action-btn {
+      background: transparent;
       border: none;
-      color: #fff;
+      color: var(--text-muted);
+      font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 0 32px rgba(56, 189, 248, 0.5);
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .action-btn:hover {
+      color: var(--cyan);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .delete-btn:hover {
+      color: var(--priority-high);
+    }
+
+    .floating-record-btn {
+      position: absolute;
+      bottom: 24px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--gradient-echo);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.5), 0 0 20px rgba(56, 189, 248, 0.4);
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 90;
     }
 
-    .mic-button:hover {
+    .floating-record-btn:hover {
       transform: scale(1.08);
-      box-shadow: 0 0 45px rgba(168, 85, 247, 0.7);
     }
 
-    .mic-button.recording {
-      background: linear-gradient(135deg, var(--mic-red), #ff7a00);
-      box-shadow: 0 0 40px var(--mic-red-glow);
-      animation: echoPulse 1.2s infinite alternate cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes echoPulse {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.12); }
-    }
-
-    .mic-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-top: 8px;
-    }
-
+    /* Modal Styles */
     .modal-overlay {
       position: absolute;
-      inset: 0;
-      background: rgba(6, 7, 11, 0.88);
-      backdrop-filter: blur(16px);
-      display: none;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(6, 7, 11, 0.85);
+      backdrop-filter: blur(14px);
+      z-index: 100;
+      display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      z-index: 100;
-      animation: sheetFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 1;
+      transition: opacity 0.25s ease;
     }
 
     .modal-overlay.closing {
-      animation: sheetFadeOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
     }
 
-    .modal-overlay.closing .modal-card {
-      animation: sheetSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes sheetFade {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes sheetFadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-
-    .modal-card {
+    .modal-sheet {
       background: var(--surface-dark);
-      border-top-left-radius: 38px;
-      border-top-right-radius: 38px;
-      padding: 24px 20px 36px;
-      text-align: center;
       border-top: 1px solid var(--card-border-glow);
-      max-height: 85%;
-      display: flex;
-      flex-direction: column;
-      animation: sheetSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      border-top-left-radius: 32px;
+      border-top-right-radius: 32px;
+      padding: 24px 20px 32px;
+      box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.8);
+      max-height: 90%;
       overflow-y: auto;
     }
 
-    @keyframes sheetSlideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    @keyframes sheetSlideDown {
-      from { transform: translateY(0); }
-      to { transform: translateY(100%); }
-    }
-
-    .modal-drag-handle {
-      width: 36px;
-      height: 4px;
-      background: var(--text-muted);
-      border-radius: 2px;
-      margin: 0 auto 16px;
-      opacity: 0.5;
-    }
-
-    .waveform {
+    .modal-header {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--card-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--cyan);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Waveform Animation */
+    .waveform-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       gap: 4px;
-      height: 42px;
+      height: 48px;
       margin: 16px 0;
     }
 
     .wave-bar {
       width: 4px;
-      background: var(--gradient-echo);
-      border-radius: 4px;
+      background: var(--cyan);
+      border-radius: 2px;
       height: 12px;
-      transition: height 0.12s ease;
+      transition: height 0.15s ease;
     }
 
     .wave-bar.active {
-      animation: wavePulse 0.5s infinite alternate cubic-bezier(0.4, 0, 0.6, 1);
+      animation: wavePulse 0.8s infinite alternate ease-in-out;
+      background: var(--gradient-echo);
     }
 
     @keyframes wavePulse {
-      0% { height: 6px; opacity: 0.6; }
-      50% { height: 36px; opacity: 1; }
-      100% { height: 12px; opacity: 0.7; }
+      0% { height: 8px; }
+      100% { height: 42px; }
     }
 
-    .voice-textarea {
-      width: 100%;
-      min-height: 84px;
-      background: var(--card-dark);
-      border: 1px solid var(--card-border-glow);
-      border-radius: 18px;
-      padding: 14px;
-      color: #fff;
-      font-size: 14px;
-      line-height: 1.45;
-      outline: none;
-      resize: none;
-      margin-bottom: 16px;
-    }
-
-    .voice-textarea::placeholder {
-      color: var(--text-muted);
-    }
-
+    /* Toast */
     .toast {
       position: absolute;
-      top: 64px;
+      top: 70px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--gradient-echo);
+      background: var(--surface-dark);
+      border: 1px solid var(--cyan);
       color: #fff;
-      padding: 8px 18px;
-      border-radius: 24px;
+      padding: 10px 20px;
+      border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      z-index: 200;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      z-index: 150;
       display: none;
-      animation: toastPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: toastFade 0.3s ease;
     }
 
-    @keyframes toastPop {
-      from { transform: translate(-50%, -12px); opacity: 0; }
-      to { transform: translate(-50%, 0); opacity: 1; }
+    @keyframes toastFade {
+      from { opacity: 0; transform: translate(-50%, -10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
-    /* Smart AI Calendar Styles */
+    /* Calendar Grid */
     .calendar-card {
       background: var(--card-dark);
       border: 1px solid var(--card-border);
       border-radius: 24px;
       padding: 18px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(20px);
     }
 
     .calendar-header {
@@ -654,23 +632,14 @@
     }
 
     .calendar-nav-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--card-border);
-      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #fff;
       width: 32px;
       height: 32px;
       border-radius: 10px;
       cursor: pointer;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .calendar-nav-btn:hover {
-      background: var(--cyan);
-      color: #0c0e17;
+      font-size: 14px;
     }
 
     .calendar-weekdays {
@@ -679,364 +648,269 @@
       text-align: center;
       font-size: 10px;
       font-weight: 800;
-      color: var(--text-secondary);
+      color: var(--text-muted);
       margin-bottom: 8px;
-      letter-spacing: 0.5px;
     }
 
     .calendar-days-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
+      gap: 4px;
     }
 
     .cal-day-cell {
       aspect-ratio: 1;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid transparent;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      padding: 6px 2px 4px;
+      justify-content: center;
       cursor: pointer;
       position: relative;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
     }
 
     .cal-day-cell:hover {
-      transform: translateY(-2px);
-      border-color: var(--cyan);
-      background: rgba(56, 189, 248, 0.12);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .cal-day-cell.other-month {
-      opacity: 0.25;
-      pointer-events: none;
+      opacity: 0.3;
     }
 
     .cal-day-cell.today {
-      border: 1.5px solid var(--cyan);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-weight: 800;
     }
 
     .cal-day-cell.selected {
-      background: var(--gradient-echo) !important;
-      border-color: transparent !important;
-      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5);
-    }
-
-    .cal-day-cell.selected .cal-day-number {
-      color: #ffffff !important;
+      background: var(--gradient-echo);
+      color: #fff;
       font-weight: 900;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
     }
 
-    .cal-day-number {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    /* Heatmap Load Badges */
     .load-indicator {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
-      margin-bottom: 2px;
+      margin-top: 3px;
     }
 
-    .load-light {
-      background: #30d158;
-      box-shadow: 0 0 8px #30d158;
-    }
-
-    .load-medium {
-      background: #ff9f0a;
-      box-shadow: 0 0 8px #ff9f0a;
-    }
-
-    .load-heavy {
-      background: #ff453a;
-      box-shadow: 0 0 10px #ff453a;
-      animation: busyPulse 1.2s infinite alternate;
-    }
-
-    @keyframes busyPulse {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.3); }
-    }
+    .load-light { background: var(--emerald); }
+    .load-medium { background: var(--amber); }
+    .load-heavy { background: var(--rose); }
 
     .echo-footer-tagline {
       font-size: 9px;
+      font-weight: 900;
       letter-spacing: 2px;
       color: var(--text-muted);
-      text-transform: uppercase;
       text-align: center;
-      margin-top: 14px;
-      font-weight: 700;
+      margin-top: 16px;
+      text-transform: uppercase;
     }
 
-    /* Conflict Warning Box */
-    .conflict-warning-card {
-      background: rgba(255, 69, 58, 0.1);
-      border: 1px solid rgba(255, 69, 58, 0.3);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 16px;
-      text-align: left;
+    .chip-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .chip-btn.active {
+      background: var(--gradient-echo);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .timeline-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
     }
   </style>
 </head>
 <body>
 
-  <div class="toast" id="toastMsg">✦ Echo: Thought Remembered</div>
+  <div class="ambient-background"></div>
 
   <div class="app-frame">
-    <!-- PWA Install Direct Banner -->
-    <div class="pwa-install-banner" id="pwaBanner">
-      <span>⚡ Install Echo App on Android</span>
-      <button class="install-btn-banner" onclick="openInstallModal()">Install App</button>
-    </div>
+    <!-- Toast Notification -->
+    <div id="toastMsg" class="toast">✦ Task Updated</div>
 
-    <!-- Status Bar -->
-    <div class="status-bar">
-      <span id="liveTime">9:41 AM</span>
-      <span style="letter-spacing:1.5px; font-weight:800; color:var(--cyan);">ECHO</span>
-    </div>
-
-    <!-- Header & Echo Brand Logo -->
+    <!-- Header -->
     <div class="header">
       <div class="brand-container">
-        <!-- SVG Echo Logo -->
-        <svg class="logo-icon-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="logo-icon-svg" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="45" stroke="url(#logoGrad)" stroke-width="6" opacity="0.4" />
+          <circle cx="50" cy="50" r="32" stroke="url(#logoGrad)" stroke-width="8" />
+          <circle cx="50" cy="50" r="14" fill="url(#logoGrad)" />
           <defs>
-            <linearGradient id="echoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#38bdf8" />
-              <stop offset="45%" stop-color="#6366f1" />
-              <stop offset="80%" stop-color="#a855f7" />
-              <stop offset="100%" stop-color="#ec4899" />
+              <stop offset="50%" stop-color="#6366f1" />
+              <stop offset="100%" stop-color="#a855f7" />
             </linearGradient>
           </defs>
-          <path d="M 60 12 A 40 40 0 1 0 78 72 L 68 84 L 56 78 A 38 38 0 1 1 60 12 Z" fill="url(#echoGrad)" />
-          <rect x="36" y="42" width="4" height="16" rx="2" fill="#38bdf8" />
-          <rect x="44" y="34" width="4" height="32" rx="2" fill="#6366f1" />
-          <rect x="52" y="28" width="4" height="44" rx="2" fill="#a855f7" />
-          <rect x="60" y="36" width="4" height="28" rx="2" fill="#ec4899" />
-          <rect x="68" y="44" width="4" height="12" rx="2" fill="#38bdf8" />
         </svg>
-
         <div>
           <div class="brand-title">echo</div>
-          <div class="brand-tagline">YOUR LIFE. REMEMBERED.</div>
+          <div class="brand-tagline">second brain ai</div>
         </div>
       </div>
-
       <div class="header-actions">
-        <button class="header-btn" id="installHeaderBtn" onclick="openInstallModal()" title="Download / Install App">📲</button>
-        <button class="header-btn" onclick="switchView('calendar')" title="Smart AI Calendar">📅</button>
-        <button class="header-btn" onclick="switchView('search')" title="AI Search">🔍</button>
-        <button class="header-btn" onclick="switchView('night')" title="Night Review">🌙</button>
+        <button class="header-btn" onclick="openBackupModal()" title="Backup & Settings">⚙️</button>
+        <button class="header-btn" onclick="openRecordModal()" title="Voice Record">🎙️</button>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
-      <button class="tab-btn active" id="tab-dashboard" onclick="switchView('dashboard')">Dashboard</button>
-      <button class="tab-btn" id="tab-timeline" onclick="switchView('timeline')">Timeline</button>
-      <button class="tab-btn" id="tab-calendar" onclick="switchView('calendar')">Calendar</button>
-      <button class="tab-btn" id="tab-night" onclick="switchView('night')">Night Review</button>
+      <button id="tab-dashboard" class="tab-btn active" onclick="switchView('dashboard')">🏠 Today</button>
+      <button id="tab-timeline" class="tab-btn" onclick="switchView('timeline')">⏳ Timeline</button>
+      <button id="tab-calendar" class="tab-btn" onclick="switchView('calendar')">📅 Calendar</button>
+      <button id="tab-night" class="tab-btn" onclick="switchView('night')">🌙 Night Review</button>
+      <button id="tab-search" class="tab-btn" onclick="switchView('search')">🔍 Search</button>
     </div>
 
-    <!-- Scrollable Content -->
-    <div class="content-area" id="mainContent">
-      <!-- Dynamic View Rendered Here -->
-    </div>
+    <!-- Main Content Body -->
+    <div id="mainContent" class="content-area"></div>
 
-    <!-- Floating Echo Mic Record Button -->
-    <div class="bottom-mic-container">
-      <button class="mic-button" id="micBtn" onclick="openRecordModal()">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-          <line x1="12" y1="19" x2="12" y2="22"></line>
-        </svg>
+    <!-- Floating Record Mic Button -->
+    <button class="floating-record-btn" onclick="openRecordModal()" title="Speak to Echo AI">🎙️</button>
+  </div>
+
+  <!-- Voice Record Modal -->
+  <div id="recordModal" class="modal-overlay" style="display:none;">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">🎙️ Speak Natural Thought</div>
+        <button class="modal-close-btn" onclick="closeRecordModal()">✕</button>
+      </div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
+        Echo AI automatically parses dates, times, priorities, and people from your voice.
+      </div>
+      <input type="text" id="voiceTextInput" class="form-input" placeholder="e.g. 'Meeting with HOD tomorrow at 8:00 AM urgent'" style="margin-bottom:12px;" />
+      
+      <div class="waveform-container" id="waveform"></div>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+        <button id="stopRecordBtn" class="tab-btn" style="flex:none; padding:10px 18px;" onclick="toggleSpeechRecording()">
+          🎙️ Toggle Mic
+        </button>
+        <button class="tab-btn active" style="flex:none; padding:10px 24px; font-weight:800;" onclick="processAndSaveVoiceInput()">
+          ✦ Add to Task
+        </button>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); margin-top:12px; text-align:center;" id="recordStatusText">
+        Microphone active • Tap Mic or type above
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Edit Modal -->
+  <div id="editModal" class="modal-overlay" style="display:none;">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Edit Task Details</div>
+        <button class="modal-close-btn" onclick="closeEditModal()">✕</button>
+      </div>
+      <input type="hidden" id="editTaskId" />
+      <div class="form-group">
+        <label class="form-label">Task Title</label>
+        <input type="text" id="editTaskTitle" class="form-input" placeholder="Enter task title" />
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Category</label>
+          <select id="editTaskCategory" class="form-select">
+            <option value="today">Today</option>
+            <option value="tomorrow">Tomorrow</option>
+            <option value="thisWeek">This Week</option>
+            <option value="upcoming">Upcoming</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Priority</label>
+          <select id="editTaskPriority" class="form-select">
+            <option value="high">High</option>
+            <option value="med">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Time</label>
+          <input type="text" id="editTaskTime" class="form-input" placeholder="e.g. 9:00 AM" />
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">People (comma separated)</label>
+          <input type="text" id="editTaskPeople" class="form-input" placeholder="e.g. Rahul, HOD" />
+        </div>
+      </div>
+      <button class="tab-btn active" style="width:100%; padding:12px; margin-top:8px; font-weight:800;" onclick="saveEditedTask()">
+        ✦ Save Changes
       </button>
-      <div class="mic-label">Tap to Speak</div>
     </div>
+  </div>
 
-    <!-- AI Time Slot Conflict Dialog Modal -->
-    <div class="modal-overlay" id="conflictModal">
-      <div class="modal-card">
-        <div class="modal-drag-handle"></div>
-        <h2 style="font-family:'Outfit'; font-size:20px; font-weight:800; color:var(--priority-high);" id="conflictTitle">⚠️ Time Slot Conflict Detected!</h2>
-        <p style="font-size:12px; color:var(--text-secondary); margin: 6px 0 14px;" id="conflictSubtitle">
-          Already a task has been assigned for this time slot.
-        </p>
-
-        <div class="conflict-warning-card" id="conflictDetails">
-          <!-- Details rendered dynamically -->
-        </div>
-
-        <div style="font-size:11px; font-weight:700; color:var(--cyan); letter-spacing:1px; text-transform:uppercase; text-align:left; margin-bottom:8px;">
-          Select Alternative Open Time Slot:
-        </div>
-
-        <div class="timeline-chips" id="alternativeTimeChips">
-          <!-- Suggested time chips -->
-        </div>
-
-        <button class="tab-btn active" style="width:100%; padding:14px; font-size:13px; font-weight:800; border-radius:18px; margin-top:12px;" onclick="resolveConflictSlot()">
-          ✦ Confirm & Reschedule Slot
-        </button>
+  <!-- Time Conflict Modal -->
+  <div id="conflictModal" class="modal-overlay" style="display:none;">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title" id="conflictTitle" style="color:var(--amber);">⚠️ Time Slot Conflict</div>
+        <button class="modal-close-btn" onclick="document.getElementById('conflictModal').style.display='none'">✕</button>
       </div>
+      <div id="conflictSubtitle" style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;"></div>
+      <div id="conflictDetails" class="glass-card" style="margin-bottom:14px;"></div>
+      <div class="form-label">Suggested Alternative Slots:</div>
+      <div id="alternativeTimeChips" class="timeline-chips" style="margin-bottom:16px;"></div>
+      <button class="tab-btn active" style="width:100%; padding:12px; font-weight:800;" onclick="resolveConflictSlot()">
+        ✦ Confirm Rescheduled Time
+      </button>
     </div>
+  </div>
 
-    <!-- Installation Helper Modal -->
-    <div class="modal-overlay" id="installModal">
-      <div class="modal-card">
-        <div class="modal-drag-handle"></div>
-        <h2 style="font-family:'Outfit'; font-size:22px; font-weight:800; background:var(--gradient-echo); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Install Echo App on Android</h2>
-        <p style="font-size:12px; color:var(--text-secondary); margin: 4px 0 16px;">
-          Install Echo directly to your phone's home screen as a native standalone application.
-        </p>
-
-        <button class="tab-btn active" style="width:100%; padding:14px; font-size:14px; font-weight:800; border-radius:18px; margin-bottom:16px;" onclick="triggerOneTapInstall()">
-          ⚡ Tap Here to Install App Now
-        </button>
-
-        <div style="font-size:11px; font-weight:700; color:var(--cyan); letter-spacing:1px; text-transform:uppercase; text-align:left; margin-bottom:8px;">
-          Manual Installation Guide (Chrome / Android):
-        </div>
-
-        <div class="install-step-card">
-          <div class="step-num">1</div>
-          <div style="font-size:12px;">Open <b>echo</b> URL in <b>Google Chrome</b> or <b>Edge</b> on your phone.</div>
-        </div>
-
-        <div class="install-step-card">
-          <div class="step-num">2</div>
-          <div style="font-size:12px;">Tap the <b>three dots menu (⋮)</b> in top-right corner of Chrome.</div>
-        </div>
-
-        <div class="install-step-card">
-          <div class="step-num">3</div>
-          <div style="font-size:12px;">Select <b>"Install App"</b> or <b>"Add to Home screen"</b>.</div>
-        </div>
-
-        <button class="tab-btn" style="margin-top:8px;" onclick="closeInstallModal()">Close Guide</button>
+  <!-- Backup & Settings Modal -->
+  <div id="backupModal" class="modal-overlay" style="display:none;">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">⚙️ Data Backup & Settings</div>
+        <button class="modal-close-btn" onclick="document.getElementById('backupModal').style.display='none'">✕</button>
       </div>
-    </div>
-
-    <!-- Speech Recording Modal -->
-    <div class="modal-overlay" id="recordModal" onclick="if(event.target===this) closeRecordModal()">
-      <div class="modal-card">
-        <div class="modal-drag-handle" onclick="closeRecordModal()" style="cursor:pointer;" title="Collapse listener"></div>
-        <h2 style="font-family:'Outfit'; font-size:22px; font-weight:800; background:var(--gradient-echo); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" id="modalTitle">Listening to thoughts...</h2>
-        <p style="font-size:12px; color:var(--text-secondary); margin: 4px 0 14px;" id="modalSubtitle">
-          Speak naturally. Echo remembers everything.
-        </p>
-
-        <textarea class="voice-textarea" id="voiceTextInput" placeholder="Speak or type: 'Tomorrow I am having a meeting with HOD at 8:00 AM and it is urgent...'"></textarea>
-
-        <div class="waveform" id="waveform">
-          <!-- Animated sound bars -->
+      <div class="glass-card" style="margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">User Profile</div>
+        <div style="font-size:12px; color:var(--text-secondary);">Greeting Name: <strong id="settingsNameDisplay">Yamini</strong></div>
+        <button class="chip-btn active" style="margin-top:8px;" onclick="editUserName()">Edit Greeting Name</button>
+      </div>
+      <div class="glass-card" style="margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">Data Management</div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button class="chip-btn" onclick="exportDataJSON()">📥 Export JSON</button>
+          <button class="chip-btn" onclick="importDataJSON()">📤 Import JSON</button>
+          <button class="chip-btn" style="color:var(--priority-high);" onclick="resetToSampleData()">🔄 Reset Data</button>
         </div>
-
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <button class="mic-button recording" style="width:64px; height:64px;" id="stopRecordBtn" onclick="toggleSpeechRecording()">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"></rect>
-            </svg>
-          </button>
-          <button class="tab-btn active" style="flex:none; padding:0 24px; border-radius:32px; font-weight:800;" onclick="processAndSaveVoiceInput()">✦ Add to Task</button>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:14px;" id="recordStatusText">Microphone active • Tap Mic to toggle recording</div>
-
-        <div class="echo-footer-tagline">RECORD. UNDERSTAND. PLAN. ACHIEVE.</div>
       </div>
     </div>
   </div>
 
   <script>
-    // PWA Installed Check - Hide all download/install options when app is installed on phone
-    function checkPWAInstalled() {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-      const localInstalled = localStorage.getItem('echo_pwa_installed') === 'true';
-
-      if (isStandalone || localInstalled) {
-        const banner = document.getElementById('pwaBanner');
-        const installBtn = document.getElementById('installHeaderBtn');
-        const installModal = document.getElementById('installModal');
-        if (banner) {
-          banner.classList.add('hidden');
-          banner.style.setProperty('display', 'none', 'important');
-        }
-        if (installBtn) {
-          installBtn.style.setProperty('display', 'none', 'important');
-        }
-        if (installModal) {
-          installModal.style.display = 'none';
-        }
-      }
-    }
-
-    window.addEventListener('appinstalled', () => {
-      localStorage.setItem('echo_pwa_installed', 'true');
-      checkPWAInstalled();
-      showToast('✦ Echo App Installed!');
-    });
-
-    document.addEventListener('DOMContentLoaded', checkPWAInstalled);
-    checkPWAInstalled();
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
-      });
-    }
-
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-    });
-
-    function openInstallModal() {
-      if (deferredPrompt) {
-        triggerOneTapInstall();
-      } else {
-        document.getElementById('installModal').style.display = 'flex';
-      }
-    }
-
-    function closeInstallModal() {
-      document.getElementById('installModal').style.display = 'none';
-    }
-
-    function triggerOneTapInstall() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            localStorage.setItem('echo_pwa_installed', 'true');
-            checkPWAInstalled();
-            showToast('✦ Installation Accepted!');
-          }
-          deferredPrompt = null;
-          closeInstallModal();
-        });
-      } else {
-        document.getElementById('installModal').style.display = 'flex';
-      }
-    }
-
-    function directDownloadApp() {
-      openInstallModal();
-    }
-
-    // Echo Persistence Engine
-    const STORAGE_KEY = 'echo_app_state_v8';
+    // Persistence & State Management
+    const STORAGE_KEY = 'echo_app_state_v9';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1052,33 +926,50 @@
       ]
     };
 
-    var state = JSON.parse(JSON.stringify(defaultState));
+    let state = JSON.parse(JSON.stringify(defaultState));
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          state = JSON.parse(saved);
+          reevaluateCategories();
+          return;
+        }
+      } catch(e) {}
+      state = JSON.parse(JSON.stringify(defaultState));
+      reevaluateCategories();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch(e) {}
+    }
 
     function getGreeting() {
       const hour = new Date().getHours();
       const userName = (state && state.userName) ? state.userName : 'Yamini';
-      if (hour >= 5 && hour < 12) {
-        return `Good Morning, ${userName}.`;
-      } else if (hour >= 12 && hour < 17) {
-        return `Good Afternoon, ${userName}.`;
-      } else if (hour >= 17 && hour < 22) {
-        return `Good Evening, ${userName}.`;
-      } else {
-        return `Good Night, ${userName}.`;
-      }
+      if (hour >= 5 && hour < 12) return `Good Morning, ${userName}.`;
+      if (hour >= 12 && hour < 17) return `Good Afternoon, ${userName}.`;
+      if (hour >= 17 && hour < 22) return `Good Evening, ${userName}.`;
+      return `Good Night, ${userName}.`;
     }
 
     function editUserName() {
       const current = (state && state.userName) ? state.userName : 'Yamini';
-      const name = prompt("Enter your name for AI Greeting:", current);
+      const name = prompt("Enter your preferred name for AI Greeting:", current);
       if (name && name.trim()) {
         state.userName = name.trim();
         saveState();
         render();
+        const display = document.getElementById('settingsNameDisplay');
+        if (display) display.innerText = state.userName;
         showToast(`✦ Welcome, ${state.userName}!`);
       }
     }
 
+    // Category & Date Re-evaluator (FIXED CRITICAL BUG)
     function reevaluateCategories() {
       if (!state || !state.items) return;
       const todayDate = new Date();
@@ -1088,59 +979,24 @@
       tomorrowObj.setDate(todayDate.getDate() + 1);
       const tomorrowISO = tomorrowObj.toISOString().split('T')[0];
 
-      const monthMap = {
-        january:0, jan:0, february:1, feb:1, march:2, mar:2, april:3, apr:3,
-        may:4, june:5, jun:5, july:6, jul:6, august:7, aug:7,
-        september:8, sep:8, oct:9, october:9, november:10, nov:10, december:11, dec:11
-      };
-
       state.items.forEach(item => {
-        const titleLower = (item.title || '').toLowerCase();
-        const dateMatch = titleLower.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s+(?:of\s+)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)\b/i) ||
-                          titleLower.match(/\b(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)\s+(\d{1,2})(?:st|nd|rd|th)?\b/i);
-
-        if (dateMatch) {
-          let day, mStr;
-          if (isNaN(parseInt(dateMatch[1]))) {
-            mStr = dateMatch[1].toLowerCase();
-            day = parseInt(dateMatch[2]);
-          } else {
-            day = parseInt(dateMatch[1]);
-            mStr = dateMatch[2].toLowerCase();
-          }
-          const mIdx = monthMap[mStr];
-          if (mIdx !== undefined && day >= 1 && day <= 31) {
-            let yr = todayDate.getFullYear();
-            let dObj = new Date(yr, mIdx, day);
-            if (dObj < new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate())) {
-              dObj.setFullYear(yr + 1);
-            }
-            item.targetDate = dObj.toISOString().split('T')[0];
-            const mName = dObj.toLocaleDateString([], { month: 'short' });
-            item.date = `${mName} ${dObj.getDate()}`;
-          }
-        }
-
         if (!item.targetDate) {
           if (item.category === 'today') {
             item.targetDate = todayISO;
           } else if (item.category === 'tomorrow') {
-            item.targetDate = todayISO;
+            item.targetDate = tomorrowISO; // FIXED: previously set to todayISO incorrectly!
           } else {
             item.targetDate = tomorrowISO;
           }
         }
 
-        if (item.targetDate <= todayISO) {
-          if (item.category !== 'today') {
-            item.category = 'today';
-            item.date = 'Today';
-          }
+        // Keep category synchronized with targetDate
+        if (item.targetDate === todayISO) {
+          item.category = 'today';
+          item.date = 'Today';
         } else if (item.targetDate === tomorrowISO) {
-          if (item.category !== 'tomorrow') {
-            item.category = 'tomorrow';
-            item.date = 'Tomorrow';
-          }
+          item.category = 'tomorrow';
+          item.date = 'Tomorrow';
         } else if (item.targetDate > tomorrowISO) {
           if (item.category !== 'upcoming' && item.category !== 'thisWeek') {
             item.category = 'upcoming';
@@ -1149,37 +1005,13 @@
       });
     }
 
-    function loadState() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          state = parsed;
-          reevaluateCategories();
-          return state;
-        }
-      } catch(e) {}
-      state = JSON.parse(JSON.stringify(defaultState));
-      reevaluateCategories();
-      return state;
-    }
-
     loadState();
 
-    function saveState() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch(e) {}
-    }
-
-    // Live Date & Midnight AI Rollover Engine
+    // Midnight Rollover Engine
     function updateDateAndClock() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const liveTimeEl = document.getElementById('liveTime');
-      if (liveTimeEl) liveTimeEl.innerText = timeStr;
-
       const isoToday = now.toISOString().split('T')[0];
+
       if (state.lastActiveDate && state.lastActiveDate !== isoToday) {
         runMidnightRollover(isoToday);
       } else {
@@ -1192,21 +1024,23 @@
     function runMidnightRollover(newDateStr) {
       reevaluateCategories();
 
-      state.items = state.items.filter(item => {
-        if (!item.completed) return true;
-        return false;
+      // Mark uncompleted past items for today
+      state.items.forEach(item => {
+        if (item.completed && !item.completedAt) {
+          item.completedAt = new Date().toISOString();
+        }
       });
 
       state.lastActiveDate = newDateStr;
       saveState();
       render();
-      showToast('✦ Midnight AI Routine: Past Tasks Updated');
+      showToast('✦ Midnight AI Routine: Daily Items Rolled Over');
     }
 
-    setInterval(updateDateAndClock, 5000);
+    setInterval(updateDateAndClock, 10000);
     updateDateAndClock();
 
-    // Web Speech API Integration
+    // Web Speech API
     let recognition = null;
     let isRecordingSpeech = false;
 
@@ -1230,19 +1064,10 @@
         };
 
         recognition.onerror = (event) => {
-          console.warn('Speech recognition error:', event.error);
           isRecordingSpeech = false;
           updateMicUI();
           const text = document.getElementById('recordStatusText');
-          if (text) {
-            if (event.error === 'not-allowed') {
-              text.innerText = '⚠️ Mic access denied. Allow mic permissions or type your task above.';
-            } else if (event.error === 'no-speech') {
-              text.innerText = '🎙️ Listening... Speak into your microphone or type above.';
-            } else {
-              text.innerText = `⚠️ Mic status: ${event.error}. You can also type your task above.`;
-            }
-          }
+          if (text) text.innerText = `⚠️ Mic status: ${event.error}. You can also type your task.`;
         };
 
         recognition.onend = () => {
@@ -1251,25 +1076,70 @@
         };
       }
     }
-
     initSpeechRecognition();
 
-    // Render Views
+    function startSpeechRecognition() {
+      if (!recognition) {
+        const text = document.getElementById('recordStatusText');
+        if (text) text.innerText = '💡 Web Speech API not supported in this browser. Type your task above!';
+        return;
+      }
+      if (isRecordingSpeech) return;
+      try {
+        recognition.start();
+        isRecordingSpeech = true;
+        updateMicUI();
+      } catch(e) {
+        isRecordingSpeech = false;
+        updateMicUI();
+      }
+    }
+
+    function toggleSpeechRecording() {
+      if (isRecordingSpeech) {
+        if (recognition) { try { recognition.stop(); } catch(e) {} }
+        isRecordingSpeech = false;
+        updateMicUI();
+      } else {
+        startSpeechRecognition();
+      }
+    }
+
+    function updateMicUI() {
+      const btn = document.getElementById('stopRecordBtn');
+      const text = document.getElementById('recordStatusText');
+      const wf = document.getElementById('waveform');
+
+      if (isRecordingSpeech) {
+        if (btn) btn.innerHTML = '⏹ Listening...';
+        if (text) text.innerText = 'Echo listening live... Speak now or edit text!';
+        if (wf) wf.querySelectorAll('.wave-bar').forEach(b => b.classList.add('active'));
+      } else {
+        if (btn) btn.innerHTML = '🎙️ Toggle Mic';
+        if (text) text.innerText = recognition ? 'Microphone paused • Tap Mic or type task' : 'Type your task above and tap Add to Task';
+        if (wf) wf.querySelectorAll('.wave-bar').forEach(b => b.classList.remove('active'));
+      }
+    }
+
+    function animateWaveform() {
+      const wf = document.getElementById('waveform');
+      if (wf) {
+        wf.innerHTML = Array.from({length: 16}).map((_, i) => `
+          <div class="wave-bar ${isRecordingSpeech ? 'active' : ''}" style="animation-delay: ${(i * 0.07).toFixed(2)}s; height: ${Math.floor(Math.random() * 20 + 8)}px;"></div>
+        `).join('');
+      }
+    }
+
+    // View Rendering
     function render() {
       reevaluateCategories();
       saveState();
       const container = document.getElementById('mainContent');
-      if (state.currentView === 'dashboard') {
-        renderDashboard(container);
-      } else if (state.currentView === 'timeline') {
-        renderTimeline(container);
-      } else if (state.currentView === 'calendar') {
-        renderCalendar(container);
-      } else if (state.currentView === 'night') {
-        renderNightReview(container);
-      } else if (state.currentView === 'search') {
-        renderSearch(container);
-      }
+      if (state.currentView === 'dashboard') renderDashboard(container);
+      else if (state.currentView === 'timeline') renderTimeline(container);
+      else if (state.currentView === 'calendar') renderCalendar(container);
+      else if (state.currentView === 'night') renderNightReview(container);
+      else if (state.currentView === 'search') renderSearch(container);
     }
 
     function renderDashboard(container) {
@@ -1277,105 +1147,102 @@
       const upcomingItems = state.items.filter(i => i.category !== 'today' && !i.completed);
 
       container.innerHTML = `
-        <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(99,102,241,0.18)); border:1px solid var(--card-border-glow); padding:18px 20px; margin-bottom:12px;">
+        <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(99,102,241,0.18)); border:1px solid var(--card-border-glow); padding:18px 20px;">
           <div style="font-size:10px; font-weight:900; letter-spacing:1.5px; color:var(--cyan); text-transform:uppercase;">SECOND BRAIN AI OPERATING SYSTEM</div>
-          <div style="font-family:'Outfit', sans-serif; font-size:24px; font-weight:800; color:#fff; margin-top:4px; display:flex; align-items:center; justify-content:space-between;">
+          <div style="font-family:'Outfit', sans-serif; font-size:22px; font-weight:800; color:#fff; margin-top:4px; display:flex; align-items:center; justify-content:space-between;">
             <span>${getGreeting()}</span>
             <span style="font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;" onclick="editUserName()" title="Edit Name">✏️ ${state.userName || 'Yamini'}</span>
           </div>
-          <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Here is your structured breakdown for today.</div>
+          <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Structured executive breakdown for today.</div>
         </div>
 
-        <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(168,85,247,0.12)); border:1px solid rgba(56,189,248,0.3); display:flex; justify-content:space-between; align-items:center; padding:14px 18px; margin-bottom:12px;">
+        <!-- Instant Natural Language Add Task Bar -->
+        <div class="quick-input-card">
+          <div style="font-size:10px; font-weight:800; color:var(--cyan); text-transform:uppercase; margin-bottom:6px; letter-spacing:1px;">✨ QUICK AI NATURAL INPUT</div>
+          <div class="quick-input-row">
+            <input type="text" id="quickAddInput" class="quick-input-field" placeholder="e.g. 'Meeting with HOD tomorrow at 8 AM urgent'" onkeydown="if(event.key==='Enter') quickAddTaskFromInput()" />
+            <button class="quick-add-btn" onclick="quickAddTaskFromInput()">+ Add Task</button>
+          </div>
+        </div>
+
+        <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(168,85,247,0.1)); border:1px solid rgba(56,189,248,0.25); display:flex; justify-content:space-between; align-items:center; padding:12px 16px;">
           <div>
             <div style="font-size:10px; font-weight:900; letter-spacing:1.5px; color:var(--cyan); text-transform:uppercase;">🌅 MORNING AI AUDIO BRIEFING</div>
-            <div style="font-size:13px; font-weight:700; color:#fff; margin-top:2px;">Daily Executive Audio Summary (30s)</div>
+            <div style="font-size:12px; font-weight:700; color:#fff; margin-top:2px;">Executive Audio Summary</div>
           </div>
-          <button id="briefingPlayBtn" class="tab-btn active" style="padding:8px 14px; font-size:12px; font-weight:800; border-radius:20px;" onclick="toggleBriefingAudio()">
-            ${isBriefingPlaying ? '⏹ Pause Briefing' : '▶ Play Briefing'}
+          <button id="briefingPlayBtn" class="tab-btn active" style="padding:6px 12px; font-size:11px;" onclick="toggleBriefingAudio()">
+            ${isBriefingPlaying ? '⏹ Pause' : '▶ Play'}
           </button>
-        </div>
-
-        <div class="glass-card">
-          <div class="mission-badge">✦ TODAY'S MISSION</div>
-          <div class="mission-text">Focus on high-leverage execution. Speak natural thoughts anytime to automate planning.</div>
         </div>
 
         <div class="section-title">
           <span>Today's Tasks & Priorities</span>
           <span style="font-size:12px; color:var(--text-secondary);">${state.items.filter(i => i.category === 'today' && i.completed).length}/${state.items.filter(i => i.category === 'today').length} Done</span>
         </div>
+
         ${todayTasks.length === 0 ? `
-          <div class="glass-card" style="font-size:13px; color:var(--text-muted);">No active tasks for today. Tap Record to speak thoughts.</div>
-        ` : todayTasks.map(item => `
-          <div class="glass-card">
-            <div class="task-item">
-              <div class="task-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleTask(${item.id})">
-                ${item.completed ? '✓' : ''}
-              </div>
-              <div class="task-content" onclick="toggleTask(${item.id})">
-                <div class="task-title ${item.completed ? 'completed' : ''}">${item.title}</div>
-                <div class="task-meta">
-                  ${item.type === 'meeting' ? '📅 Meeting • ' : ''}
-                  ${item.people.length ? '👤 ' + item.people.join(', ') + ' • ' : ''}
-                  ${item.time ? '🕒 ' + item.time : 'Today'}
-                </div>
-              </div>
-              ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
-              <span class="priority-badge priority-${item.priority}">${item.priority}</span>
-              <button class="delete-btn" onclick="deleteTask(${item.id})">✕</button>
-            </div>
+          <div class="glass-card" style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">
+            🎉 All tasks completed for today! Tap Record or Quick Add to schedule new items.
           </div>
-        `).join('')}
+        ` : todayTasks.map(item => renderTaskCard(item)).join('')}
 
         <div class="section-title">
-          <span>Upcoming Meetings & Scheduled Events</span>
+          <span>Upcoming Events & Scheduled Tasks</span>
           <span style="font-size:12px; color:var(--cyan); font-weight:700;">${upcomingItems.length} Scheduled</span>
         </div>
+
         ${upcomingItems.length === 0 ? `
-          <div class="glass-card" style="font-size:13px; color:var(--text-muted);">No upcoming meetings or future tasks scheduled. Clear focus block ahead.</div>
-        ` : upcomingItems.map(m => `
-          <div class="glass-card">
-            <div class="task-item">
-              <span style="font-size:22px;">${m.type === 'meeting' ? '📅' : '📌'}</span>
-              <div class="task-content">
-                <div class="task-title">${m.title}</div>
-                <div class="task-meta">${m.people.length ? 'With ' + m.people.join(', ') : (m.type === 'meeting' ? 'Event' : 'Task')} • ${m.date || m.category} ${m.time ? 'at ' + m.time : ''}</div>
-              </div>
-              ${m.time ? `<span class="time-badge">${m.time}</span>` : ''}
-              <span class="priority-badge priority-${m.priority}">${m.priority}</span>
-              <button class="delete-btn" onclick="deleteTask(${m.id})">✕</button>
-            </div>
+          <div class="glass-card" style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">
+            No upcoming items scheduled. Clear focus block ahead.
           </div>
-        `).join('')}
+        ` : upcomingItems.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">RECORD. UNDERSTAND. PLAN. ACHIEVE.</div>
       `;
     }
 
-    let isBriefingPlaying = false;
+    function renderTaskCard(item) {
+      return `
+        <div class="glass-card">
+          <div class="task-item">
+            <div class="task-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleTask(${item.id})">
+              ${item.completed ? '✓' : ''}
+            </div>
+            <div class="task-content" onclick="toggleTask(${item.id})">
+              <div class="task-title ${item.completed ? 'completed' : ''}">${item.title}</div>
+              <div class="task-meta">
+                ${item.type === 'meeting' ? '📅 Meeting • ' : ''}
+                ${item.people && item.people.length ? '👤 ' + item.people.join(', ') + ' • ' : ''}
+                ${item.time ? '🕒 ' + item.time : item.date || item.category}
+              </div>
+            </div>
+            ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
+            <span class="priority-badge priority-${item.priority}">${item.priority}</span>
+            <button class="action-btn" onclick="openEditModal(${item.id})" title="Edit Task">✏️</button>
+            <button class="action-btn delete-btn" onclick="deleteTask(${item.id})" title="Delete Task">✕</button>
+          </div>
+        </div>
+      `;
+    }
 
+    // Audio Briefing TTS
+    let isBriefingPlaying = false;
     function generateMorningBriefingScript() {
       const todayDateStr = new Date().toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' });
       const highTasks = state.items.filter(i => i.category === 'today' && i.priority === 'high' && !i.completed);
       const meetings = state.items.filter(i => i.type === 'meeting' && !i.completed);
 
-      let script = `Good morning! Today is ${todayDateStr}. `;
-      script += `Your daily focus mission is to execute high-leverage priorities with zero clutter. `;
-
+      let script = `Good morning ${state.userName}! Today is ${todayDateStr}. `;
       if (highTasks.length > 0) {
         script += `You have ${highTasks.length} high priority task${highTasks.length > 1 ? 's' : ''}: ${highTasks.map(t => t.title).join(', ')}. `;
       } else {
-        script += `All priority tasks for today are currently clear. `;
+        script += `All priority tasks for today are clear. `;
       }
-
       if (meetings.length > 0) {
-        script += `You have ${meetings.length} meeting${meetings.length > 1 ? 's' : ''} scheduled: ${meetings.map(m => m.title + (m.time ? ' at ' + m.time : '')).join(', ')}. `;
+        script += `You have ${meetings.length} scheduled event${meetings.length > 1 ? 's' : ''}: ${meetings.map(m => m.title).join(', ')}. `;
       } else {
-        script += `No meetings are scheduled for today. You have a deep focus block ahead. `;
+        script += `No meetings scheduled for today. Have an executive day!`;
       }
-
-      script += `Speak anytime to record new thoughts. Have an executive, productive day!`;
       return script;
     }
 
@@ -1384,84 +1251,61 @@
         showToast('⚠️ Speech Synthesis not supported on this browser');
         return;
       }
-
       if (isBriefingPlaying) {
         window.speechSynthesis.cancel();
         isBriefingPlaying = false;
-        const btn = document.getElementById('briefingPlayBtn');
-        if (btn) btn.innerHTML = '▶ Play Briefing';
+        render();
         showToast('⏹ Briefing Audio Paused');
         return;
       }
-
       window.speechSynthesis.cancel();
-      const scriptText = generateMorningBriefingScript();
-      const utterance = new SpeechSynthesisUtterance(scriptText);
+      const utterance = new SpeechSynthesisUtterance(generateMorningBriefingScript());
       utterance.rate = 1.05;
       utterance.pitch = 1.0;
       utterance.lang = 'en-US';
 
       utterance.onstart = () => {
         isBriefingPlaying = true;
-        const btn = document.getElementById('briefingPlayBtn');
-        if (btn) btn.innerHTML = '⏹ Pause Briefing';
+        render();
         showToast('🔊 Playing Morning AI Briefing...');
       };
-
       utterance.onend = () => {
         isBriefingPlaying = false;
-        const btn = document.getElementById('briefingPlayBtn');
-        if (btn) btn.innerHTML = '▶ Play Briefing';
+        render();
       };
-
       utterance.onerror = () => {
         isBriefingPlaying = false;
-        const btn = document.getElementById('briefingPlayBtn');
-        if (btn) btn.innerHTML = '▶ Play Briefing';
+        render();
       };
-
       window.speechSynthesis.speak(utterance);
-    }
-
-    function checkQuickRecordIntent() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('action') === 'record' || window.location.hash === '#record') {
-        setTimeout(() => {
-          openRecordModal();
-          startSpeechRecognition();
-          showToast('⚡ Quick Voice Record Triggered!');
-        }, 400);
-      }
     }
 
     function showToast(msg) {
       const toast = document.getElementById('toastMsg');
-      toast.innerText = msg;
-      toast.style.display = 'block';
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 2400);
+      if (toast) {
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2400);
+      }
     }
 
-    render();
-    checkQuickRecordIntent();
-
+    // Timeline View
     function renderTimeline(container) {
       const filter = state.timelineFilter || 'all';
       let filtered = state.items;
-      if (filter !== 'all') {
-        if (filter === 'completed') {
-          filtered = state.items.filter(i => i.completed);
-        } else if (filter === 'thisWeek') {
-          filtered = state.items.filter(i => !i.completed && (i.category === 'today' || i.category === 'tomorrow' || i.category === 'thisWeek'));
-        } else {
-          filtered = state.items.filter(i => !i.completed && i.category === filter);
-        }
+      if (filter === 'completed') {
+        filtered = state.items.filter(i => i.completed);
+      } else if (filter === 'today') {
+        filtered = state.items.filter(i => i.category === 'today');
+      } else if (filter === 'tomorrow') {
+        filtered = state.items.filter(i => i.category === 'tomorrow');
+      } else if (filter === 'thisWeek') {
+        filtered = state.items.filter(i => i.category === 'thisWeek' || i.category === 'upcoming');
       }
 
       container.innerHTML = `
         <div class="section-title">Smart Timeline</div>
-        <div class="timeline-chips">
+        <div class="timeline-chips" style="margin-bottom:12px;">
           ${['all', 'today', 'tomorrow', 'thisWeek', 'completed'].map(c => `
             <button class="chip-btn ${filter === c ? 'active' : ''}" onclick="setTimelineFilter('${c}')">
               ${c === 'all' ? 'All' : c.charAt(0).toUpperCase() + c.slice(1)}
@@ -1470,23 +1314,10 @@
         </div>
 
         ${filtered.length === 0 ? `
-          <div class="glass-card" style="font-size:13px; color:var(--text-muted);">No items in this timeline category.</div>
-        ` : filtered.map(item => `
-          <div class="glass-card">
-            <div class="task-item">
-              <div class="task-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleTask(${item.id})">
-                ${item.completed ? '✓' : ''}
-              </div>
-              <div class="task-content" onclick="toggleTask(${item.id})">
-                <div class="task-title ${item.completed ? 'completed' : ''}">${item.title}</div>
-                <div class="task-meta">Category: ${item.category} ${item.time ? '• Time: ' + item.time : ''}</div>
-              </div>
-              ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
-              <span class="priority-badge priority-${item.priority}">${item.priority}</span>
-              <button class="delete-btn" onclick="deleteTask(${item.id})">✕</button>
-            </div>
+          <div class="glass-card" style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">
+            No items in this timeline category.
           </div>
-        `).join('')}
+        ` : filtered.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">YOUR LIFE. REMEMBERED.</div>
       `;
@@ -1497,13 +1328,13 @@
       renderTimeline(document.getElementById('mainContent'));
     }
 
+    // Calendar View
     let currentCalendarYear = new Date().getFullYear();
     let currentCalendarMonth = new Date().getMonth();
     let selectedCalendarISO = new Date().toISOString().split('T')[0];
 
     function renderCalendar(container) {
       reevaluateCategories();
-
       const todayISO = new Date().toISOString().split('T')[0];
       const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       const currentMonthName = monthNames[currentCalendarMonth];
@@ -1521,7 +1352,6 @@
       });
 
       let cellsHTML = '';
-
       for (let i = startingDayOfWeek - 1; i >= 0; i--) {
         const d = daysInPrevMonth - i;
         cellsHTML += `<div class="cal-day-cell other-month"><span class="cal-day-number">${d}</span></div>`;
@@ -1537,13 +1367,9 @@
 
         const count = scheduleDensity[dateISO] || 0;
         let loadBadge = '';
-        if (count === 1) {
-          loadBadge = `<div class="load-indicator load-light" title="1 Task • Light Load"></div>`;
-        } else if (count >= 2 && count <= 3) {
-          loadBadge = `<div class="load-indicator load-medium" title="${count} Tasks • Moderate Load"></div>`;
-        } else if (count >= 4) {
-          loadBadge = `<div class="load-indicator load-heavy" title="${count} Tasks • Heavy Busy Schedule"></div>`;
-        }
+        if (count === 1) loadBadge = `<div class="load-indicator load-light"></div>`;
+        else if (count >= 2 && count <= 3) loadBadge = `<div class="load-indicator load-medium"></div>`;
+        else if (count >= 4) loadBadge = `<div class="load-indicator load-heavy"></div>`;
 
         cellsHTML += `
           <div class="cal-day-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="selectCalendarDate('${dateISO}')">
@@ -1556,29 +1382,18 @@
       const selectedDateObj = new Date(selectedCalendarISO + 'T00:00:00');
       const selectedDateStr = selectedDateObj.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
       const dayTasks = state.items.filter(i => i.targetDate === selectedCalendarISO);
-      const dayCount = dayTasks.length;
-
-      let workloadStatus = '🟢 Light Focus Day';
-      let workloadColor = 'var(--priority-low)';
-      if (dayCount >= 4) {
-        workloadStatus = '🔴 Heavy / Busy Schedule';
-        workloadColor = 'var(--priority-high)';
-      } else if (dayCount >= 2) {
-        workloadStatus = '🟡 Moderate Schedule';
-        workloadColor = 'var(--priority-med)';
-      }
 
       container.innerHTML = `
         <div class="calendar-card">
           <div class="calendar-header">
             <div>
               <div class="calendar-title">${currentMonthName} ${currentCalendarYear}</div>
-              <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">AI Schedule Density & Heatmap</div>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">AI Heatmap & Schedule Density</div>
             </div>
             <div style="display:flex; gap:6px;">
               <button class="calendar-nav-btn" onclick="prevCalendarMonth()">‹</button>
               <button class="calendar-nav-btn" onclick="nextCalendarMonth()">›</button>
-              <button class="tab-btn active" style="padding:4px 10px; font-size:11px; border-radius:10px;" onclick="jumpToCalendarToday()">Today</button>
+              <button class="chip-btn active" onclick="jumpToCalendarToday()">Today</button>
             </div>
           </div>
 
@@ -1599,39 +1414,14 @@
 
         <div class="section-title">
           <span>📅 ${selectedDateStr}</span>
-          <span style="font-size:11px; font-weight:700; color:${workloadColor};">${workloadStatus}</span>
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <button class="tab-btn active" style="width:100%; padding:10px; font-size:12px; font-weight:800; border-radius:14px;" onclick="addQuickTaskForDate('${selectedCalendarISO}')">
-            + Add Task for ${selectedDateObj.toLocaleDateString([], { month: 'short', day: 'numeric' })}
-          </button>
+          <span style="font-size:11px; font-weight:700; color:var(--cyan);">${dayTasks.length} Scheduled</span>
         </div>
 
         ${dayTasks.length === 0 ? `
           <div class="glass-card" style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">
-            No tasks or meetings scheduled for this date. Clear focus time ahead.
+            No items scheduled for this date. Clear focus time ahead.
           </div>
-        ` : dayTasks.map(item => `
-          <div class="glass-card">
-            <div class="task-item">
-              <div class="task-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleTask(${item.id})">
-                ${item.completed ? '✓' : ''}
-              </div>
-              <div class="task-content" onclick="toggleTask(${item.id})">
-                <div class="task-title ${item.completed ? 'completed' : ''}">${item.title}</div>
-                <div class="task-meta">
-                  ${item.type === 'meeting' ? '📅 Meeting • ' : ''}
-                  ${item.people.length ? '👤 ' + item.people.join(', ') + ' • ' : ''}
-                  ${item.time ? '🕒 ' + item.time : 'Scheduled'}
-                </div>
-              </div>
-              ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
-              <span class="priority-badge priority-${item.priority}">${item.priority}</span>
-              <button class="delete-btn" onclick="deleteTask(${item.id})">✕</button>
-            </div>
-          </div>
-        `).join('')}
+        ` : dayTasks.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">SMART CALENDAR. PERFECT TIMING.</div>
       `;
@@ -1641,25 +1431,16 @@
       selectedCalendarISO = dateISO;
       renderCalendar(document.getElementById('mainContent'));
     }
-
     function prevCalendarMonth() {
       currentCalendarMonth--;
-      if (currentCalendarMonth < 0) {
-        currentCalendarMonth = 11;
-        currentCalendarYear--;
-      }
+      if (currentCalendarMonth < 0) { currentCalendarMonth = 11; currentCalendarYear--; }
       renderCalendar(document.getElementById('mainContent'));
     }
-
     function nextCalendarMonth() {
       currentCalendarMonth++;
-      if (currentCalendarMonth > 11) {
-        currentCalendarMonth = 0;
-        currentCalendarYear++;
-      }
+      if (currentCalendarMonth > 11) { currentCalendarMonth = 0; currentCalendarYear++; }
       renderCalendar(document.getElementById('mainContent'));
     }
-
     function jumpToCalendarToday() {
       const now = new Date();
       currentCalendarYear = now.getFullYear();
@@ -1668,68 +1449,57 @@
       renderCalendar(document.getElementById('mainContent'));
     }
 
-    function addQuickTaskForDate(dateISO) {
-      openRecordModal();
-      const dObj = new Date(dateISO + 'T00:00:00');
-      const dateStr = dObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
-      const input = document.getElementById('voiceTextInput');
-      if (input) {
-        input.value = `Task for ${dateStr} at 10:00 AM: `;
-      }
-    }
-
+    // Night Review View
     function renderNightReview(container) {
       const completedCount = state.items.filter(i => i.completed).length;
       const totalCount = state.items.length;
-      const score = totalCount === 0 ? 95 : Math.round((completedCount / totalCount) * 100);
+      const score = totalCount === 0 ? 100 : Math.round((completedCount / totalCount) * 100);
 
       container.innerHTML = `
-        <div class="glass-card" style="text-align:center; padding:24px;">
-          <div style="font-size:12px; color:var(--text-secondary);">Productivity Score</div>
+        <div class="glass-card" style="text-align:center; padding:24px; background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(99,102,241,0.15));">
+          <div style="font-size:12px; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; font-weight:800;">Daily Executive Score</div>
           <div style="font-family:'Outfit'; font-size:48px; font-weight:900; background:var(--gradient-echo); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:6px 0;">${score} / 100</div>
-          <div style="font-size:12px; color:var(--priority-low); font-weight:700;">✦ ${completedCount} Tasks Completed • Zero Clutter</div>
+          <div style="font-size:12px; color:var(--emerald); font-weight:700;">✦ ${completedCount} Tasks Completed Successfully</div>
         </div>
 
-        <div class="section-title">Today's Wins</div>
-        <div class="glass-card">⭐ Completed ${completedCount} priority action items</div>
-        <div class="glass-card">⭐ Echo structured timeline automatically</div>
+        <div class="section-title">Today's Achievements</div>
+        ${state.items.filter(i => i.completed).length === 0 ? `
+          <div class="glass-card" style="font-size:13px; color:var(--text-muted); text-align:center; padding:16px;">No tasks completed yet today. Keep executing!</div>
+        ` : state.items.filter(i => i.completed).map(i => `
+          <div class="glass-card">⭐ Completed: <strong>${i.title}</strong></div>
+        `).join('')}
 
-        <div class="section-title">Midnight AI Schedule</div>
-        <div class="glass-card">✦ Midnight Routine runs automatically at 12:00 AM</div>
+        <div class="section-title">Midnight AI System Routine</div>
+        <div class="glass-card">✦ Automatic Midnight Rollover organizes past items at 12:00 AM daily.</div>
         
-        <button class="tab-btn active" style="width:100%; margin-top:12px; font-weight:800;" onclick="runMidnightRollover(new Date().toISOString().split('T')[0])">🌙 Run Midnight Routine Now</button>
+        <button class="tab-btn active" style="width:100%; margin-top:8px; padding:12px; font-weight:800;" onclick="runMidnightRollover(new Date().toISOString().split('T')[0])">
+          🌙 Run Midnight Rollover Now
+        </button>
 
         <div class="echo-footer-tagline">RECORD. UNDERSTAND. PLAN. ACHIEVE.</div>
       `;
     }
 
+    // Search View
     function renderSearch(container) {
       const q = (state.searchQuery || '').toLowerCase();
       const results = q ? state.items.filter(i => 
         i.title.toLowerCase().includes(q) || 
-        i.people.some(p => p.toLowerCase().includes(q)) ||
+        (i.people && i.people.some(p => p.toLowerCase().includes(q))) ||
         i.category.toLowerCase().includes(q)
       ) : state.items;
 
       container.innerHTML = `
         <div class="section-title">AI Memory Search</div>
-        <div class="glass-card">
-          <input type="text" placeholder="Ask Echo: 'Rahul', 'CodeVerse', 'Meeting'..." 
+        <div class="glass-card" style="margin-bottom:12px;">
+          <input type="text" placeholder="Ask Echo: 'Rahul', 'HOD', 'Meeting', 'Presentation'..." 
                  value="${state.searchQuery || ''}" 
                  oninput="handleSearch(this.value)"
                  style="width:100%; background:transparent; border:none; color:#fff; font-size:14px; outline:none;" />
         </div>
-        ${results.map(item => `
-          <div class="glass-card">
-            <div class="task-item">
-              <div class="task-content">
-                <div class="task-title">${item.title}</div>
-                <div class="task-meta">${item.people.length ? 'People: ' + item.people.join(', ') : 'Category: ' + item.category} ${item.time ? '• ' + item.time : ''}</div>
-              </div>
-              <span class="priority-badge priority-${item.priority}">${item.priority}</span>
-            </div>
-          </div>
-        `).join('')}
+        ${results.length === 0 ? `
+          <div class="glass-card" style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">No matching items found.</div>
+        ` : results.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">YOUR LIFE. REMEMBERED.</div>
       `;
@@ -1752,8 +1522,9 @@
       const item = state.items.find(i => i.id === id);
       if (item) {
         item.completed = !item.completed;
+        if (item.completed) item.completedAt = new Date().toISOString();
         render();
-        showToast(item.completed ? 'Task Completed' : 'Task Reopened');
+        showToast(item.completed ? '✓ Task Completed' : 'Task Reopened');
       }
     }
 
@@ -1763,239 +1534,62 @@
       showToast('Item Deleted');
     }
 
-    function openRecordModal() {
-      const modal = document.getElementById('recordModal');
-      if (modal) {
-        modal.style.display = 'flex';
-        modal.classList.remove('closing');
-      }
-      const input = document.getElementById('voiceTextInput');
-      if (input) {
-        input.value = '';
-        setTimeout(() => {
-          if (input && typeof input.focus === 'function') input.focus();
-        }, 100);
-      }
-      animateWaveform();
-      startSpeechRecognition();
-    }
-
-    function startSpeechRecognition() {
-      if (!recognition) {
-        const text = document.getElementById('recordStatusText');
-        if (text) text.innerText = '💡 Web Speech API not supported in this browser. Type your task above!';
-        return;
-      }
-
-      if (isRecordingSpeech) return;
-
-      try {
-        recognition.start();
-        isRecordingSpeech = true;
-        updateMicUI();
-      } catch(e) {
-        console.warn('Speech start error:', e);
-        try { recognition.stop(); } catch(err) {}
-        isRecordingSpeech = false;
-        updateMicUI();
-      }
-    }
-
-    function toggleSpeechRecording() {
-      if (isRecordingSpeech) {
-        if (recognition) {
-          try { recognition.stop(); } catch(e) {}
-        }
-        isRecordingSpeech = false;
-        updateMicUI();
-      } else {
-        startSpeechRecognition();
-      }
-    }
-
-    function updateMicUI() {
-      const btn = document.getElementById('stopRecordBtn');
-      const text = document.getElementById('recordStatusText');
-      const wf = document.getElementById('waveform');
-
-      if (isRecordingSpeech) {
-        if (btn) btn.classList.add('recording');
-        if (text) text.innerText = 'Echo listening live... Speak now or edit text!';
-        if (wf) {
-          wf.querySelectorAll('.wave-bar').forEach(bar => bar.classList.add('active'));
-        }
-      } else {
-        if (btn) btn.classList.remove('recording');
-        if (text) text.innerText = recognition ? 'Microphone paused • Edit text or tap Mic to record' : 'Type your task above and tap Add to Task';
-        if (wf) {
-          wf.querySelectorAll('.wave-bar').forEach(bar => bar.classList.remove('active'));
-        }
-      }
-    }
-
-    function animateWaveform() {
-      const wf = document.getElementById('waveform');
-      if (wf) {
-        wf.innerHTML = Array.from({length: 16}).map((_, i) => `
-          <div class="wave-bar ${isRecordingSpeech ? 'active' : ''}" style="animation-delay: ${(i * 0.07).toFixed(2)}s; height: ${Math.floor(Math.random() * 20 + 8)}px;"></div>
-        `).join('');
-      }
-    }
-
-    // Natural Language AI Extraction, Time Parser & Title Cleaner
+    // Natural Language NLP Parsing Engine
     function cleanAndExtractAI(rawText) {
       let lower = rawText.toLowerCase();
       const todayDate = new Date();
       
-      // 1. Category & Explicit Date Extractor
-      const monthMap = {
-        january:0, jan:0, february:1, feb:1, march:2, mar:2, april:3, apr:3,
-        may:4, june:5, jun:5, july:6, jul:6, august:7, aug:7,
-        september:8, sep:8, oct:9, october:9, november:10, nov:10, december:11, dec:11
-      };
-
-      let explicitDateObj = null;
-      const dateMatch1 = lower.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s+(?:of\s+)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)\b/i);
-      const dateMatch2 = lower.match(/\b(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)\s+(\d{1,2})(?:st|nd|rd|th)?\b/i);
-
-      if (dateMatch1) {
-        const day = parseInt(dateMatch1[1]);
-        const mStr = dateMatch1[2].toLowerCase();
-        const monthIdx = monthMap[mStr];
-        if (monthIdx !== undefined && day >= 1 && day <= 31) {
-          let yr = todayDate.getFullYear();
-          explicitDateObj = new Date(yr, monthIdx, day);
-          if (explicitDateObj < new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate())) {
-            explicitDateObj.setFullYear(yr + 1);
-          }
-        }
-      } else if (dateMatch2) {
-        const mStr = dateMatch2[1].toLowerCase();
-        const day = parseInt(dateMatch2[2]);
-        const monthIdx = monthMap[mStr];
-        if (monthIdx !== undefined && day >= 1 && day <= 31) {
-          let yr = todayDate.getFullYear();
-          explicitDateObj = new Date(yr, monthIdx, day);
-          if (explicitDateObj < new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate())) {
-            explicitDateObj.setFullYear(yr + 1);
-          }
-        }
-      }
-
       let category = 'today';
-      let dateStr = 'Today (' + todayDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
       let targetDateObj = new Date();
 
-      const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-      const todayDayIdx = todayDate.getDay();
-      
-      let matchedDayIdx = -1;
-      daysOfWeek.forEach((day, idx) => {
-        if (lower.includes(day)) matchedDayIdx = idx;
-      });
-
-      if (explicitDateObj) {
-        targetDateObj = explicitDateObj;
-        const targetISO = targetDateObj.toISOString().split('T')[0];
-        const todayISO = todayDate.toISOString().split('T')[0];
-
-        const tomorrowObj = new Date();
-        tomorrowObj.setDate(todayDate.getDate() + 1);
-        const tomorrowISO = tomorrowObj.toISOString().split('T')[0];
-
-        if (targetISO === todayISO) {
-          category = 'today';
-          dateStr = 'Today';
-        } else if (targetISO === tomorrowISO) {
-          category = 'tomorrow';
-          dateStr = 'Tomorrow';
-        } else {
-          category = 'upcoming';
-          const monthName = targetDateObj.toLocaleDateString([], { month: 'short' });
-          dateStr = `${monthName} ${targetDateObj.getDate()}`;
-        }
-      } else if (lower.includes('tomorrow')) {
+      if (lower.includes('tomorrow')) {
         category = 'tomorrow';
         targetDateObj.setDate(targetDateObj.getDate() + 1);
-        dateStr = 'Tomorrow (' + targetDateObj.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
-      } else if (lower.includes('today') || lower.includes('this morning') || lower.includes('tonight') || lower.includes('this afternoon')) {
-        category = 'today';
-        dateStr = 'Today (' + todayDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
-      } else if (matchedDayIdx !== -1) {
-        let diff = (matchedDayIdx - todayDayIdx + 7) % 7;
-        if (diff === 0) diff = 7;
-        targetDateObj.setDate(todayDate.getDate() + diff);
-
-        if (diff === 1) {
-          category = 'tomorrow';
-          dateStr = 'Tomorrow';
-        } else {
-          category = 'thisWeek';
-          dateStr = daysOfWeek[matchedDayIdx].charAt(0).toUpperCase() + daysOfWeek[matchedDayIdx].slice(1);
-        }
       } else if (lower.includes('next week') || lower.includes('this week')) {
         category = 'thisWeek';
         targetDateObj.setDate(targetDateObj.getDate() + 7);
-        dateStr = 'This Week';
       }
 
-      // 2. Exact Time Extractor (e.g. 8:00 AM, 8 AM, 5 PM, at 8)
+      // Time parsing
       let time = '';
       const timeMatch = rawText.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/i);
       if (timeMatch) {
         let hour = parseInt(timeMatch[1]);
         let min = timeMatch[2] || '00';
         let ampm = timeMatch[3] ? timeMatch[3].toUpperCase() : '';
-
-        // If no AM/PM, infer based on morning/evening context
         if (!ampm) {
           if (lower.includes('morning') || lower.includes('am')) ampm = 'AM';
           else if (lower.includes('evening') || lower.includes('night') || lower.includes('pm')) ampm = 'PM';
           else ampm = (hour >= 8 && hour <= 11) ? 'AM' : 'PM';
         }
         time = `${hour}:${min} ${ampm}`;
-      } else if (lower.includes('8 am') || lower.includes('8:00 am')) {
-        time = '8:00 AM';
-      } else if (lower.includes('5 pm') || lower.includes('5:00 pm')) {
-        time = '5:00 PM';
-      } else if (lower.includes('morning')) {
-        time = '9:00 AM';
-      } else if (lower.includes('evening')) {
-        time = '6:00 PM';
       }
 
-      // 3. Priority Extractor & Urgency Rule
+      // Priority parsing
       let priority = 'med';
-      if (lower.includes('urgent') || lower.includes('asap') || lower.includes('high priority') || lower.includes('very important') || lower.includes('critical')) {
+      if (lower.includes('urgent') || lower.includes('asap') || lower.includes('high priority') || lower.includes('critical') || lower.includes('important')) {
         priority = 'high';
+      } else if (lower.includes('low priority') || lower.includes('optional')) {
+        priority = 'low';
       }
 
-      // 4. Meeting vs Task Extractor
-      let isMeeting = lower.includes('meeting') || lower.includes('call') || lower.includes('discussion') || lower.includes('sync') || lower.includes('conference');
+      // Meeting vs Task
+      let isMeeting = lower.includes('meeting') || lower.includes('call') || lower.includes('sync') || lower.includes('discussion');
       let type = isMeeting ? 'meeting' : 'task';
 
-      // 5. People Extractor
+      // People extraction
       const people = [];
       if (lower.includes('rahul')) people.push('Rahul');
       if (lower.includes('hod')) people.push('HOD');
       if (lower.includes('alex')) people.push('Alex');
       if (lower.includes('client')) people.push('Client');
 
-      // 6. Intelligent Title Cleaner (Omits temporal, time & urgency phrases)
+      // Title cleaning
       let cleanedTitle = rawText;
-
       cleanedTitle = cleanedTitle.replace(/^(tomorrow|today|this week|next week)\s*/i, '');
-      cleanedTitle = cleanedTitle.replace(/^(i have a|i need to|i am having a|i have to)\s*/i, '');
-      
+      cleanedTitle = cleanedTitle.replace(/^(i have a|i need to|i am having a|i have to|remind me to)\s*/i, '');
       cleanedTitle = cleanedTitle.replace(/\b(at\s+)?\d{1,2}(?::\d{2})?\s*(am|pm)?\b/gi, '');
-      cleanedTitle = cleanedTitle.replace(/in the morning/gi, '');
-      cleanedTitle = cleanedTitle.replace(/in the evening/gi, '');
-      cleanedTitle = cleanedTitle.replace(/and it'?s urgent\.?/gi, '');
-      cleanedTitle = cleanedTitle.replace(/this is urgent\.?/gi, '');
-      cleanedTitle = cleanedTitle.replace(/\burgent\.?\b/gi, '');
-      cleanedTitle = cleanedTitle.replace(/\basap\.?\b/gi, '');
-      cleanedTitle = cleanedTitle.replace(/\bvery important\.?\b/gi, '');
-
+      cleanedTitle = cleanedTitle.replace(/\burgent\.?\b|\basap\.?\b|\bvery important\.?\b/gi, '');
       cleanedTitle = cleanedTitle.trim().replace(/^[\s,.-]+|[\s,.-]+$/g, '');
 
       if (cleanedTitle.length > 0) {
@@ -2012,23 +1606,31 @@
         priority: priority,
         category: category,
         targetDate: targetDateISO,
-        date: dateStr,
         time: time,
         people: people
       };
     }
 
-    let pendingItemWithConflict = null;
-    let selectedAlternativeTime = '';
+    function quickAddTaskFromInput() {
+      const input = document.getElementById('quickAddInput');
+      if (!input || !input.value.trim()) return;
+      const text = input.value.trim();
+      input.value = '';
+      saveParsedInput(text);
+    }
 
     function processAndSaveVoiceInput() {
-      const textInput = document.getElementById('voiceTextInput').value.trim();
-      const rawText = textInput || 'Tomorrow I am having a meeting with HOD at 8:00 AM and it is urgent';
-      
-      const parsed = cleanAndExtractAI(rawText);
+      const input = document.getElementById('voiceTextInput');
+      const text = input ? input.value.trim() : '';
+      closeRecordModal(() => {
+        saveParsedInput(text || 'Meeting with HOD tomorrow at 8:00 AM urgent');
+      });
+    }
 
+    function saveParsedInput(rawText) {
+      const parsed = cleanAndExtractAI(rawText);
       const newItem = {
-        id: Date.now(),
+        id: Date.now() + Math.floor(Math.random() * 1000),
         title: parsed.title,
         type: parsed.type,
         priority: parsed.priority,
@@ -2036,20 +1638,16 @@
         targetDate: parsed.targetDate,
         completed: false,
         people: parsed.people,
-        date: parsed.date,
         time: parsed.time || '9:00 AM'
       };
 
-      // Check Time Slot Conflict
+      // Conflict check
       const existingConflict = state.items.find(i => 
-        !i.completed && 
-        i.category === newItem.category && 
-        i.time && newItem.time && 
+        !i.completed && i.category === newItem.category && i.time && newItem.time &&
         i.time.toLowerCase().trim() === newItem.time.toLowerCase().trim()
       );
 
       if (existingConflict) {
-        // Trigger AI Conflict Dialog!
         pendingItemWithConflict = newItem;
         openConflictModal(existingConflict, newItem);
       } else {
@@ -2057,29 +1655,22 @@
       }
     }
 
-    function openConflictModal(existing, newItem) {
-      if (recognition) recognition.stop();
-      document.getElementById('recordModal').style.display = 'none';
+    let pendingItemWithConflict = null;
+    let selectedAlternativeTime = '';
 
-      document.getElementById('conflictTitle').innerText = '⚠️ Time Slot Conflict Detected!';
-      document.getElementById('conflictSubtitle').innerText = `A task is already scheduled for ${newItem.time} on ${newItem.date}. Kindly choose a different time slot.`;
-      
+    function openConflictModal(existing, newItem) {
+      document.getElementById('conflictTitle').innerText = '⚠️ Time Slot Conflict Detected';
+      document.getElementById('conflictSubtitle').innerText = `A task is already scheduled for ${newItem.time} on ${newItem.category}.`;
       document.getElementById('conflictDetails').innerHTML = `
-        <div style="font-size:12px; font-weight:700; color:#fff; margin-bottom:4px;">Already Assigned at ${existing.time}:</div>
-        <div style="font-size:13px; color:var(--cyan); font-weight:600;">"${existing.title}"</div>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Requested Task: "${newItem.title}"</div>
+        <div style="font-size:12px; color:var(--text-muted);">Existing Task:</div>
+        <div style="font-size:13px; font-weight:700; color:var(--cyan);">"${existing.title}" (${existing.time})</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">New Requested Task:</div>
+        <div style="font-size:13px; font-weight:700; color:#fff;">"${newItem.title}"</div>
       `;
 
-      // Generate 4 alternative time chips (+1h, +1.5h, +2h, +3h)
-      const baseHour = parseInt(newItem.time) || 8;
+      const baseHour = parseInt(newItem.time) || 9;
       const ampm = newItem.time.includes('PM') ? 'PM' : 'AM';
-      const alts = [
-        `${baseHour + 1}:00 ${ampm}`,
-        `${baseHour + 1}:30 ${ampm}`,
-        `${baseHour + 2}:00 ${ampm}`,
-        `${baseHour + 3}:00 ${ampm}`
-      ];
-
+      const alts = [`${baseHour + 1}:00 ${ampm}`, `${baseHour + 1}:30 ${ampm}`, `${baseHour + 2}:00 ${ampm}`];
       selectedAlternativeTime = alts[0];
 
       document.getElementById('alternativeTimeChips').innerHTML = alts.map((t, idx) => `
@@ -2095,6 +1686,30 @@
       selectedAlternativeTime = t;
     }
 
+    function resolveConflictSlot() {
+      if (pendingItemWithConflict) {
+        pendingItemWithConflict.time = selectedAlternativeTime;
+        const itemToSave = pendingItemWithConflict;
+        pendingItemWithConflict = null;
+        document.getElementById('conflictModal').style.display = 'none';
+        saveNewItem(itemToSave);
+      }
+    }
+
+    function saveNewItem(item) {
+      state.items.unshift(item);
+      switchView('dashboard');
+      showToast(`✦ Task Added & Scheduled at ${item.time}`);
+    }
+
+    // Modal Control Functions
+    function openRecordModal() {
+      const modal = document.getElementById('recordModal');
+      if (modal) modal.style.display = 'flex';
+      animateWaveform();
+      startSpeechRecognition();
+    }
+
     function closeRecordModal(callback) {
       if (recognition && isRecordingSpeech) {
         try { recognition.stop(); } catch(e) {}
@@ -2102,80 +1717,107 @@
         updateMicUI();
       }
       const modal = document.getElementById('recordModal');
-      if (modal && modal.style.display !== 'none') {
-        modal.classList.add('closing');
-        setTimeout(() => {
-          modal.style.display = 'none';
-          modal.classList.remove('closing');
-          document.getElementById('voiceTextInput').value = '';
-          if (callback) callback();
-        }, 220);
-      } else if (callback) {
-        callback();
-      }
+      if (modal) modal.style.display = 'none';
+      if (callback) callback();
     }
 
-    function resolveConflictSlot() {
-      if (pendingItemWithConflict) {
-        pendingItemWithConflict.time = selectedAlternativeTime;
+    function openEditModal(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+      document.getElementById('editTaskId').value = item.id;
+      document.getElementById('editTaskTitle').value = item.title;
+      document.getElementById('editTaskCategory').value = item.category || 'today';
+      document.getElementById('editTaskPriority').value = item.priority || 'med';
+      document.getElementById('editTaskTime').value = item.time || '';
+      document.getElementById('editTaskPeople').value = (item.people || []).join(', ');
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    function saveEditedTask() {
+      const id = parseInt(document.getElementById('editTaskId').value);
+      const item = state.items.find(i => i.id === id);
+      if (item) {
+        item.title = document.getElementById('editTaskTitle').value.trim() || item.title;
+        item.category = document.getElementById('editTaskCategory').value;
+        item.priority = document.getElementById('editTaskPriority').value;
+        item.time = document.getElementById('editTaskTime').value.trim();
+        const peopleStr = document.getElementById('editTaskPeople').value.trim();
+        item.people = peopleStr ? peopleStr.split(',').map(p => p.trim()).filter(Boolean) : [];
         
-        // Re-check conflict recursively until user hits a right spot!
-        const subConflict = state.items.find(i => 
-          !i.completed && 
-          i.category === pendingItemWithConflict.category && 
-          i.time && 
-          i.time.toLowerCase().trim() === pendingItemWithConflict.time.toLowerCase().trim()
-        );
-
-        if (subConflict) {
-          openConflictModal(subConflict, pendingItemWithConflict);
-          return;
+        const todayDate = new Date();
+        if (item.category === 'today') {
+          item.targetDate = todayDate.toISOString().split('T')[0];
+        } else if (item.category === 'tomorrow') {
+          const tom = new Date(); tom.setDate(todayDate.getDate() + 1);
+          item.targetDate = tom.toISOString().split('T')[0];
         }
 
-        const conflictModal = document.getElementById('conflictModal');
-        if (conflictModal) {
-          conflictModal.classList.add('closing');
-          setTimeout(() => {
-            conflictModal.style.display = 'none';
-            conflictModal.classList.remove('closing');
-            const itemToSave = pendingItemWithConflict;
-            pendingItemWithConflict = null;
-            saveNewItem(itemToSave);
-          }, 200);
-        } else {
-          const itemToSave = pendingItemWithConflict;
-          pendingItemWithConflict = null;
-          saveNewItem(itemToSave);
-        }
+        saveState();
+        render();
+        closeEditModal();
+        showToast('✦ Task Updated');
       }
     }
 
-    function saveNewItem(item) {
-      state.items.unshift(item);
-      
-      // Sort tasks chronologically by category & time
-      const catOrder = { today: 1, tomorrow: 2, thisWeek: 3, upcoming: 4 };
-      state.items.sort((a, b) => {
-        const catDiff = (catOrder[a.category] || 5) - (catOrder[b.category] || 5);
-        if (catDiff !== 0) return catDiff;
-        return (a.time || '').localeCompare(b.time || '');
-      });
-      
-      closeRecordModal(() => {
-        switchView('dashboard');
-        showToast(`✦ Task Added & Scheduled at ${item.time}`);
-      });
+    function openBackupModal() {
+      const modal = document.getElementById('backupModal');
+      const display = document.getElementById('settingsNameDisplay');
+      if (display) display.innerText = state.userName || 'Yamini';
+      if (modal) modal.style.display = 'flex';
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toastMsg');
-      toast.innerText = msg;
-      toast.style.display = 'block';
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 2400);
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `echo_backup_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('📥 Backup Exported!');
     }
 
+    function importDataJSON() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = event => {
+          try {
+            const parsed = JSON.parse(event.target.result);
+            if (parsed && parsed.items) {
+              state = parsed;
+              saveState();
+              render();
+              document.getElementById('backupModal').style.display = 'none';
+              showToast('📤 Data Successfully Restored!');
+            }
+          } catch(err) {
+            showToast('⚠️ Invalid JSON file');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    function resetToSampleData() {
+      if (confirm('Reset to default sample tasks?')) {
+        state = JSON.parse(JSON.stringify(defaultState));
+        saveState();
+        render();
+        document.getElementById('backupModal').style.display = 'none';
+        showToast('🔄 Reset to Default Data');
+      }
+    }
+
+    // Initial Render
     render();
   </script>
 </body>
