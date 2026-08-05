@@ -889,6 +889,7 @@
     const STORAGE_KEY = 'echo_app_state_v8';
 
     const defaultState = {
+      userName: 'Yamini',
       currentView: 'dashboard',
       timelineFilter: 'all',
       searchQuery: '',
@@ -902,6 +903,31 @@
     };
 
     let state = loadState();
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      const userName = state.userName || 'Yamini';
+      if (hour >= 5 && hour < 12) {
+        return `Good Morning, ${userName}.`;
+      } else if (hour >= 12 && hour < 17) {
+        return `Good Afternoon, ${userName}.`;
+      } else if (hour >= 17 && hour < 22) {
+        return `Good Evening, ${userName}.`;
+      } else {
+        return `Good Night, ${userName}.`;
+      }
+    }
+
+    function editUserName() {
+      const current = state.userName || 'Yamini';
+      const name = prompt("Enter your name for AI Greeting:", current);
+      if (name && name.trim()) {
+        state.userName = name.trim();
+        saveState();
+        render();
+        showToast(`✦ Welcome, ${state.userName}!`);
+      }
+    }
 
     function loadState() {
       try {
@@ -1001,10 +1027,19 @@
     }
 
     function renderDashboard(container) {
-      const meetings = state.items.filter(i => (i.type === 'meeting' || i.category === 'tomorrow') && !i.completed);
-      const todayTasks = state.items.filter(i => i.category === 'today' && !i.completed && i.type !== 'meeting');
+      const todayTasks = state.items.filter(i => i.category === 'today' && !i.completed);
+      const upcomingItems = state.items.filter(i => i.category !== 'today' && !i.completed);
 
       container.innerHTML = `
+        <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(99,102,241,0.18)); border:1px solid var(--card-border-glow); padding:18px 20px; margin-bottom:12px;">
+          <div style="font-size:10px; font-weight:900; letter-spacing:1.5px; color:var(--cyan); text-transform:uppercase;">SECOND BRAIN AI OPERATING SYSTEM</div>
+          <div style="font-family:'Outfit', sans-serif; font-size:24px; font-weight:800; color:#fff; margin-top:4px; display:flex; align-items:center; justify-content:space-between;">
+            <span>${getGreeting()}</span>
+            <span style="font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;" onclick="editUserName()" title="Edit Name">✏️ ${state.userName || 'Yamini'}</span>
+          </div>
+          <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Here is your structured breakdown for today.</div>
+        </div>
+
         <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(168,85,247,0.12)); border:1px solid rgba(56,189,248,0.3); display:flex; justify-content:space-between; align-items:center; padding:14px 18px; margin-bottom:12px;">
           <div>
             <div style="font-size:10px; font-weight:900; letter-spacing:1.5px; color:var(--cyan); text-transform:uppercase;">🌅 MORNING AI AUDIO BRIEFING</div>
@@ -1021,27 +1056,7 @@
         </div>
 
         <div class="section-title">
-          <span>Upcoming Meetings & Events</span>
-          <span style="font-size:12px; color:var(--cyan); font-weight:700;">${meetings.length} Scheduled</span>
-        </div>
-        ${meetings.length === 0 ? `
-          <div class="glass-card" style="font-size:13px; color:var(--text-muted);">No upcoming meetings scheduled. Clear focus block ahead.</div>
-        ` : meetings.map(m => `
-          <div class="glass-card">
-            <div class="task-item">
-              <span style="font-size:22px;">📅</span>
-              <div class="task-content">
-                <div class="task-title">${m.title}</div>
-                <div class="task-meta">${m.people.length ? 'With ' + m.people.join(', ') : 'Event'} • ${m.date || m.category} ${m.time ? 'at ' + m.time : ''}</div>
-              </div>
-              ${m.time ? `<span class="time-badge">${m.time}</span>` : ''}
-              <span class="priority-badge priority-${m.priority}">${m.priority}</span>
-            </div>
-          </div>
-        `).join('')}
-
-        <div class="section-title">
-          <span>Today's Priorities</span>
+          <span>Today's Tasks & Priorities</span>
           <span style="font-size:12px; color:var(--text-secondary);">${state.items.filter(i => i.category === 'today' && i.completed).length}/${state.items.filter(i => i.category === 'today').length} Done</span>
         </div>
         ${todayTasks.length === 0 ? `
@@ -1055,13 +1070,35 @@
               <div class="task-content" onclick="toggleTask(${item.id})">
                 <div class="task-title ${item.completed ? 'completed' : ''}">${item.title}</div>
                 <div class="task-meta">
+                  ${item.type === 'meeting' ? '📅 Meeting • ' : ''}
                   ${item.people.length ? '👤 ' + item.people.join(', ') + ' • ' : ''}
-                  ${item.time ? '🕒 ' + item.time : ''}
+                  ${item.time ? '🕒 ' + item.time : 'Today'}
                 </div>
               </div>
               ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
               <span class="priority-badge priority-${item.priority}">${item.priority}</span>
               <button class="delete-btn" onclick="deleteTask(${item.id})">✕</button>
+            </div>
+          </div>
+        `).join('')}
+
+        <div class="section-title">
+          <span>Upcoming Meetings & Scheduled Events</span>
+          <span style="font-size:12px; color:var(--cyan); font-weight:700;">${upcomingItems.length} Scheduled</span>
+        </div>
+        ${upcomingItems.length === 0 ? `
+          <div class="glass-card" style="font-size:13px; color:var(--text-muted);">No upcoming meetings or future tasks scheduled. Clear focus block ahead.</div>
+        ` : upcomingItems.map(m => `
+          <div class="glass-card">
+            <div class="task-item">
+              <span style="font-size:22px;">${m.type === 'meeting' ? '📅' : '📌'}</span>
+              <div class="task-content">
+                <div class="task-title">${m.title}</div>
+                <div class="task-meta">${m.people.length ? 'With ' + m.people.join(', ') : (m.type === 'meeting' ? 'Event' : 'Task')} • ${m.date || m.category} ${m.time ? 'at ' + m.time : ''}</div>
+              </div>
+              ${m.time ? `<span class="time-badge">${m.time}</span>` : ''}
+              <span class="priority-badge priority-${m.priority}">${m.priority}</span>
+              <button class="delete-btn" onclick="deleteTask(${m.id})">✕</button>
             </div>
           </div>
         `).join('')}
@@ -1353,11 +1390,36 @@
       // 1. Category & Explicit Date Extractor
       let category = 'today';
       let dateStr = 'Today (' + todayDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
+
+      const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      const todayDayIdx = todayDate.getDay();
+      
+      let matchedDayIdx = -1;
+      daysOfWeek.forEach((day, idx) => {
+        if (lower.includes(day)) matchedDayIdx = idx;
+      });
+
       if (lower.includes('tomorrow')) {
         category = 'tomorrow';
         const tomorrowDate = new Date();
         tomorrowDate.setDate(tomorrowDate.getDate() + 1);
         dateStr = 'Tomorrow (' + tomorrowDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
+      } else if (lower.includes('today') || lower.includes('this morning') || lower.includes('tonight') || lower.includes('this afternoon')) {
+        category = 'today';
+        dateStr = 'Today (' + todayDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
+      } else if (matchedDayIdx !== -1) {
+        if (matchedDayIdx === todayDayIdx) {
+          category = 'today';
+          dateStr = 'Today (' + todayDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
+        } else if (matchedDayIdx === (todayDayIdx + 1) % 7) {
+          category = 'tomorrow';
+          const tomorrowDate = new Date();
+          tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+          dateStr = 'Tomorrow (' + tomorrowDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
+        } else {
+          category = 'thisWeek';
+          dateStr = daysOfWeek[matchedDayIdx].charAt(0).toUpperCase() + daysOfWeek[matchedDayIdx].slice(1);
+        }
       } else if (lower.includes('next week') || lower.includes('this week')) {
         category = 'thisWeek';
         dateStr = 'This Week';

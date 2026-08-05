@@ -62,17 +62,29 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     state = state.copyWith(isLoading: true);
 
     final hour = DateTime.now().hour;
-    final greeting = hour < 12 ? 'Good Morning.' : (hour < 17 ? 'Good Afternoon.' : 'Good Evening.');
+    String greetingTime;
+    if (hour >= 5 && hour < 12) {
+      greetingTime = 'Good Morning';
+    } else if (hour >= 12 && hour < 17) {
+      greetingTime = 'Good Afternoon';
+    } else if (hour >= 17 && hour < 22) {
+      greetingTime = 'Good Evening';
+    } else {
+      greetingTime = 'Good Night';
+    }
+
+    const userName = 'Yamini';
+    final greeting = '$greetingTime, $userName.';
 
     final items = await _db.getAllBrainItems();
     final today = items.where((i) => i.category == TimelineCategory.today).toList();
-    final meetings = items.where((i) => i.type == BrainItemType.meeting && !i.isCompleted).toList();
+    final upcoming = items.where((i) => i.category != TimelineCategory.today && !i.isCompleted).toList();
 
     state = state.copyWith(
       isLoading: false,
       greeting: greeting,
       todayItems: today,
-      upcomingMeetings: meetings,
+      upcomingMeetings: upcoming,
     );
   }
 
