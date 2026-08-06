@@ -1,4 +1,4 @@
-const CACHE_NAME = 'echo-pwa-v12-standalone';
+const CACHE_NAME = 'echo-pwa-v13-notifications';
 const ASSETS = [
   './',
   './index.html',
@@ -45,5 +45,22 @@ self.addEventListener('fetch', (event) => {
       .catch(() => {
         return caches.match(event.request).then((cached) => cached || caches.match('./index.html'));
       })
+  );
+});
+
+// Native Push Notification Click Handling
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow('./');
+      }
+    })
   );
 });

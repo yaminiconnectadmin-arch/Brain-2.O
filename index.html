@@ -1092,6 +1092,18 @@
         <button class="chip-btn active" style="margin-top:10px;" onclick="editUserName()">Edit Greeting Name</button>
       </div>
       <div class="glass-card" style="margin-bottom:14px;">
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; display:flex; align-items:center; justify-content:space-between;">
+          <span>🔔 15-Min Pre-Meeting Push Alerts</span>
+          <span id="notifStatusBadge" style="font-size:10px; padding:3px 8px; border-radius:10px; background:rgba(255,255,255,0.1); color:var(--text-secondary);">Inactive</span>
+        </div>
+        <div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
+          Receive native mobile & desktop pop-up alerts 15 minutes before your scheduled meetings or tasks, even when the app is in the background!
+        </div>
+        <button id="enableNotifBtn" class="chip-btn active" style="width:100%; text-align:center; justify-content:center;" onclick="requestNotificationPermission()">
+          🔔 Enable 15-Minute Push Alerts Now
+        </button>
+      </div>
+      <div class="glass-card" style="margin-bottom:14px;">
         <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:6px;">App Installation & Backup</div>
         <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
           <button class="chip-btn active" onclick="openInstallModal()">📲 Install Web App</button>
@@ -1328,6 +1340,130 @@
 
     loadState();
 
+    function updateNotificationUI() {
+      const badge = document.getElementById('notifStatusBadge');
+      const btn = document.getElementById('enableNotifBtn');
+      if ('Notification' in window && Notification.permission === 'granted') {
+        if (badge) {
+          badge.innerText = 'Active 🟢';
+          badge.style.background = 'rgba(16, 185, 129, 0.2)';
+          badge.style.color = 'var(--emerald)';
+        }
+        if (btn) {
+          btn.innerText = '✅ 15-Minute Push Alerts Active';
+          btn.style.background = 'rgba(16, 185, 129, 0.2)';
+          btn.style.color = 'var(--emerald)';
+        }
+      } else if ('Notification' in window && Notification.permission === 'denied') {
+        if (badge) {
+          badge.innerText = 'Blocked 🔴';
+          badge.style.background = 'rgba(244, 63, 94, 0.2)';
+          badge.style.color = 'var(--rose)';
+        }
+        if (btn) {
+          btn.innerText = '⚠️ Alerts Blocked in Browser Settings';
+        }
+      }
+    }
+
+    function requestNotificationPermission() {
+      if (!('Notification' in window)) {
+        showToast('⚠️ Native notifications not supported on this browser');
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          showToast('🔔 Native 15-Min Push Alerts Enabled!');
+          if (state) {
+            state.notificationsEnabled = true;
+            saveState();
+          }
+          updateNotificationUI();
+          triggerTestNotification();
+        } else if (permission === 'denied') {
+          showToast('⚠️ Notifications blocked in browser settings');
+          updateNotificationUI();
+        }
+      });
+    }
+
+    function triggerTestNotification() {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+          navigator.serviceWorker.ready.then(reg => {
+            reg.showNotification('ECHO Second Brain AI', {
+              body: '🔔 15-Minute Pre-Meeting Alerts Active!',
+              icon: 'logo.png',
+              badge: 'logo.png',
+              vibrate: [200, 100, 200]
+            });
+          });
+        } else {
+          new Notification('ECHO Second Brain AI', {
+            body: '🔔 15-Minute Pre-Meeting Alerts Active!',
+            icon: 'logo.png'
+          });
+        }
+      }
+    }
+
+    function checkUpcomingTaskNotifications() {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      if (!state || !state.items) return;
+
+      const now = new Date();
+      const todayISO = toLocalISO(now);
+
+      state.items.forEach(item => {
+        if (item.completed || !item.time || item.notified15m) return;
+        
+        const targetISO = item.targetDate || todayISO;
+        if (targetISO !== todayISO) return;
+
+        const timeParts = item.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+        if (!timeParts) return;
+
+        let hour = parseInt(timeParts[1]);
+        const min = parseInt(timeParts[2]);
+        const ampm = timeParts[3] ? timeParts[3].toUpperCase() : '';
+
+        if (ampm === 'PM' && hour < 12) hour += 12;
+        if (ampm === 'AM' && hour === 12) hour = 0;
+
+        const taskDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, min, 0);
+        const diffMs = taskDate - now;
+        const diffMins = Math.floor(diffMs / 60000);
+
+        if (diffMins >= 0 && diffMins <= 15) {
+          item.notified15m = true;
+          saveState();
+
+          const notifTitle = `⏰ Upcoming ${item.type === 'meeting' ? 'Meeting' : 'Task'} in ${diffMins === 0 ? 'NOW' : diffMins + ' min'}`;
+          const notifBody = `${item.title} at ${item.time}`;
+
+          if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+            navigator.serviceWorker.ready.then(reg => {
+              reg.showNotification(notifTitle, {
+                body: notifBody,
+                icon: 'logo.png',
+                badge: 'logo.png',
+                vibrate: [300, 100, 300, 100, 300],
+                tag: 'echo-task-' + item.id,
+                renotify: true,
+                data: { taskId: item.id }
+              });
+            });
+          } else {
+            new Notification(notifTitle, {
+              body: notifBody,
+              icon: 'logo.png'
+            });
+          }
+          showToast(`⏰ Alert Sent: ${item.title}`);
+        }
+      });
+    }
+
     function updateDateAndClock() {
       const now = new Date();
       const isoToday = toLocalISO(now);
@@ -1339,6 +1475,7 @@
         reevaluateCategories();
         saveState();
       }
+      checkUpcomingTaskNotifications();
     }
 
     function runMidnightRollover(newDateStr) {
@@ -1355,7 +1492,9 @@
     }
 
     setInterval(updateDateAndClock, 10000);
+    setInterval(checkUpcomingTaskNotifications, 15000);
     updateDateAndClock();
+    setTimeout(updateNotificationUI, 500);
 
     // Web Speech API
     let recognition = null;
