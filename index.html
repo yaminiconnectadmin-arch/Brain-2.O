@@ -830,7 +830,7 @@
   <div id="installModal" class="modal-overlay" style="display:none;">
     <div class="modal-sheet">
       <div class="modal-header">
-        <div class="modal-title">📱 Install Echo to Phone</div>
+        <div class="modal-title">📱 Download & Install Echo</div>
         <button class="modal-close-btn" onclick="closeInstallModal()">✕</button>
       </div>
       <div class="glass-card" style="margin-bottom:12px; text-align:center;">
@@ -841,6 +841,15 @@
         </div>
       </div>
       
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+        <button class="tab-btn active" style="width:100%; padding:14px; font-size:13px; font-weight:800; min-height:46px;" onclick="triggerOneTapInstall()">
+          📲 Tap to Trigger Browser Install Prompt
+        </button>
+        <button class="tab-btn" style="width:100%; padding:12px; font-size:12px; font-weight:700; color:var(--cyan); border-color:var(--cyan); min-height:42px;" onclick="downloadStandaloneAppFile()">
+          📥 Download Standalone Offline App (.html / PWA)
+        </button>
+      </div>
+
       <div class="glass-card" style="margin-bottom:12px;">
         <div style="font-size:12px; font-weight:800; color:var(--cyan); margin-bottom:6px;">🍎 IPHONE (SAFARI) STEPS:</div>
         <div style="font-size:12px; color:var(--text-primary); line-height:1.5;">
@@ -853,13 +862,9 @@
       <div class="glass-card" style="margin-bottom:14px;">
         <div style="font-size:12px; font-weight:800; color:var(--cyan); margin-bottom:6px;">🤖 ANDROID (CHROME) STEPS:</div>
         <div style="font-size:12px; color:var(--text-primary); line-height:1.5;">
-          Tap the button below, or open Chrome Menu (⋮) -> <strong>Install App</strong> / <strong>Add to Home Screen</strong>.
+          Tap the button above, or open Chrome Menu (⋮) -> <strong>Install App</strong> / <strong>Add to Home Screen</strong>.
         </div>
       </div>
-
-      <button class="tab-btn active" style="width:100%; padding:14px; font-size:13px; font-weight:800;" onclick="triggerOneTapInstall()">
-        📲 Tap to Trigger Install Prompt
-      </button>
     </div>
   </div>
 
@@ -873,7 +878,7 @@
       <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
         Echo AI automatically parses dates, times, priorities, and people from your voice.
       </div>
-      <input type="text" id="voiceTextInput" class="form-input" placeholder="e.g. 'Meeting with HOD tomorrow at 8:00 AM urgent'" style="margin-bottom:12px;" />
+      <input type="text" id="voiceTextInput" class="form-input" placeholder="e.g. 'Meeting on 15th Aug 10:00 AM'" style="margin-bottom:12px;" />
       
       <div class="waveform-container" id="waveform"></div>
       
@@ -969,9 +974,10 @@
       </div>
       <div class="glass-card" style="margin-bottom:12px;">
         <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">Data Management</div>
-        <div style="display:flex; gap:8px; margin-top:8px;">
+        <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
           <button class="chip-btn" onclick="exportDataJSON()">📥 Export JSON</button>
           <button class="chip-btn" onclick="importDataJSON()">📤 Import JSON</button>
+          <button class="chip-btn" onclick="downloadStandaloneAppFile()">📲 Download App Package</button>
           <button class="chip-btn" style="color:var(--priority-high);" onclick="resetToSampleData()">🔄 Reset Data</button>
         </div>
       </div>
@@ -1043,11 +1049,26 @@
         });
       } else {
         document.getElementById('installModal').style.display = 'flex';
+        showToast('💡 Follow the steps below or tap Download Offline Package!');
       }
     }
 
+    function downloadStandaloneAppFile() {
+      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Echo_Second_Brain_AI.html`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('📥 Offline App Package Downloaded!');
+    }
+
     // State Management
-    const STORAGE_KEY = 'echo_app_state_v11';
+    const STORAGE_KEY = 'echo_app_state_v12';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1056,12 +1077,18 @@
       searchQuery: '',
       lastActiveDate: '',
       items: [
-        { id: 101, title: "Meeting with HOD", type: "meeting", priority: "high", category: "tomorrow", completed: false, people: ["HOD"], date: "Tomorrow", time: "8:00 AM" },
-        { id: 102, title: "Finish presentation deck & review", type: "task", priority: "high", category: "today", completed: false, people: [], date: "Today", time: "2:00 PM" },
-        { id: 103, title: "Call Rahul regarding proposal", type: "task", priority: "med", category: "today", completed: true, people: ["Rahul"], date: "Today", time: "11:00 AM" },
-        { id: 104, title: "Send formal project proposal", type: "task", priority: "med", category: "tomorrow", completed: false, people: [], date: "Tomorrow", time: "5:00 PM" }
+        { id: 101, title: "Meeting with HOD", type: "meeting", priority: "high", category: "tomorrow", completed: false, people: ["HOD"], date: "Tomorrow", time: "8:00 AM", targetDate: getOffsetISO(1) },
+        { id: 102, title: "Finish presentation deck & review", type: "task", priority: "high", category: "today", completed: false, people: [], date: "Today", time: "2:00 PM", targetDate: getOffsetISO(0) },
+        { id: 103, title: "Call Rahul regarding proposal", type: "task", priority: "med", category: "today", completed: true, people: ["Rahul"], date: "Today", time: "11:00 AM", targetDate: getOffsetISO(0) },
+        { id: 104, title: "Send formal project proposal", type: "task", priority: "med", category: "tomorrow", completed: false, people: [], date: "Tomorrow", time: "5:00 PM", targetDate: getOffsetISO(1) }
       ]
     };
+
+    function getOffsetISO(offsetDays) {
+      const d = new Date();
+      d.setDate(d.getDate() + offsetDays);
+      return d.toISOString().split('T')[0];
+    }
 
     let state = JSON.parse(JSON.stringify(defaultState));
 
@@ -1132,6 +1159,8 @@
           if (item.category !== 'upcoming' && item.category !== 'thisWeek') {
             item.category = 'upcoming';
           }
+          const itemD = new Date(item.targetDate + 'T00:00:00');
+          item.date = itemD.toLocaleDateString([], { month: 'short', day: 'numeric' });
         }
       });
     }
@@ -1288,7 +1317,7 @@
         <div class="quick-input-card">
           <div style="font-size:10px; font-weight:800; color:var(--cyan); text-transform:uppercase; margin-bottom:6px; letter-spacing:1px;">✨ QUICK AI NATURAL INPUT</div>
           <div class="quick-input-row">
-            <input type="text" id="quickAddInput" class="quick-input-field" placeholder="e.g. 'Meeting with HOD tomorrow at 8 AM urgent'" onkeydown="if(event.key==='Enter') quickAddTaskFromInput()" />
+            <input type="text" id="quickAddInput" class="quick-input-field" placeholder="e.g. 'Meeting on 15th Aug 10:00 AM'" onkeydown="if(event.key==='Enter') quickAddTaskFromInput()" />
             <button class="quick-add-btn" onclick="quickAddTaskFromInput()">+ Add Task</button>
           </div>
         </div>
@@ -1341,7 +1370,8 @@
               <div class="task-meta">
                 ${item.type === 'meeting' ? '📅 Meeting • ' : ''}
                 ${item.people && item.people.length ? '👤 ' + item.people.join(', ') + ' • ' : ''}
-                ${item.time ? '🕒 ' + item.time : item.date || item.category}
+                ${item.time ? '🕒 ' + item.time + ' • ' : ''}
+                <strong style="color:var(--cyan);">${item.date || item.category}</strong>
               </div>
             </div>
             ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
@@ -1420,7 +1450,7 @@
       if (toast) {
         toast.innerText = msg;
         toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 2400);
+        setTimeout(() => { toast.style.display = 'none'; }, 2600);
       }
     }
 
@@ -1669,26 +1699,117 @@
       showToast('Item Deleted');
     }
 
-    // Natural Language NLP Parsing Engine
+    // ADVANCED NATURAL LANGUAGE (NLP) DATE & TIME PARSING ENGINE
     function cleanAndExtractAI(rawText) {
       let lower = rawText.toLowerCase();
-      const todayDate = new Date();
-      
-      let category = 'today';
-      let targetDateObj = new Date();
+      const now = new Date();
+      const currentYear = now.getFullYear();
 
-      if (lower.includes('tomorrow')) {
-        category = 'tomorrow';
-        targetDateObj.setDate(targetDateObj.getDate() + 1);
-      } else if (lower.includes('next week') || lower.includes('this week')) {
-        category = 'thisWeek';
-        targetDateObj.setDate(targetDateObj.getDate() + 7);
+      let targetDateObj = new Date();
+      let hasSpecificDate = false;
+      let matchedDateStr = '';
+
+      // Month name map
+      const monthsMap = {
+        'jan': 0, 'january': 0,
+        'feb': 1, 'february': 1,
+        'mar': 2, 'march': 2,
+        'apr': 3, 'april': 3,
+        'may': 4,
+        'jun': 5, 'june': 5,
+        'jul': 6, 'july': 6,
+        'aug': 7, 'august': 7,
+        'sep': 8, 'september': 8, 'sept': 8,
+        'oct': 9, 'october': 9,
+        'nov': 10, 'november': 10,
+        'dec': 11, 'december': 11
+      };
+
+      // Pattern 1: "15th Aug", "15th August", "15 Aug", "15th of August"
+      const pattern1 = /\b(\d{1,2})(?:st|nd|rd|th)?\s*(?:of\s+)?(jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|september|sept|oct|october|nov|november|dec|december)\b/i;
+      // Pattern 2: "Aug 15th", "August 15", "Aug 15"
+      const pattern2 = /\b(jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|september|sept|oct|october|nov|november|dec|december)\s*(\d{1,2})(?:st|nd|rd|th)?\b/i;
+      // Pattern 3: "15/08", "15-08-2026"
+      const pattern3 = /\b(\d{1,2})[\/\.-](\d{1,2})(?:[\/\.-](\d{2,4}))?\b/;
+
+      let match1 = rawText.match(pattern1);
+      let match2 = rawText.match(pattern2);
+      let match3 = rawText.match(pattern3);
+
+      if (match1) {
+        matchedDateStr = match1[0];
+        const day = parseInt(match1[1]);
+        const mKey = match1[2].toLowerCase();
+        const month = monthsMap[mKey];
+        if (month !== undefined && !isNaN(day)) {
+          let year = currentYear;
+          let testDate = new Date(year, month, day);
+          if (testDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+            year++;
+            testDate = new Date(year, month, day);
+          }
+          targetDateObj = testDate;
+          hasSpecificDate = true;
+        }
+      } else if (match2) {
+        matchedDateStr = match2[0];
+        const mKey = match2[1].toLowerCase();
+        const day = parseInt(match2[2]);
+        const month = monthsMap[mKey];
+        if (month !== undefined && !isNaN(day)) {
+          let year = currentYear;
+          let testDate = new Date(year, month, day);
+          if (testDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+            year++;
+            testDate = new Date(year, month, day);
+          }
+          targetDateObj = testDate;
+          hasSpecificDate = true;
+        }
+      } else if (match3) {
+        matchedDateStr = match3[0];
+        const day = parseInt(match3[1]);
+        const month = parseInt(match3[2]) - 1;
+        let year = match3[3] ? parseInt(match3[3]) : currentYear;
+        if (year < 100) year += 2000;
+        if (!isNaN(day) && !isNaN(month)) {
+          targetDateObj = new Date(year, month, day);
+          hasSpecificDate = true;
+        }
       }
 
-      // Time parsing
+      // Handle relative terms if no specific date matched
+      if (!hasSpecificDate) {
+        if (lower.includes('tomorrow')) {
+          targetDateObj.setDate(targetDateObj.getDate() + 1);
+          matchedDateStr = 'tomorrow';
+        } else if (lower.includes('day after tomorrow')) {
+          targetDateObj.setDate(targetDateObj.getDate() + 2);
+          matchedDateStr = 'day after tomorrow';
+        } else if (lower.includes('next week') || lower.includes('this week')) {
+          targetDateObj.setDate(targetDateObj.getDate() + 7);
+          matchedDateStr = lower.includes('next week') ? 'next week' : 'this week';
+        } else {
+          // Check weekday names (e.g. "Monday", "Friday")
+          const weekdayMatch = lower.match(/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i);
+          if (weekdayMatch) {
+            const daysMap = { 'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6 };
+            const targetDay = daysMap[weekdayMatch[1]];
+            const currentDay = now.getDay();
+            let distance = targetDay - currentDay;
+            if (distance <= 0) distance += 7;
+            targetDateObj.setDate(targetDateObj.getDate() + distance);
+            matchedDateStr = weekdayMatch[0];
+          }
+        }
+      }
+
+      // Time Parsing
       let time = '';
+      let matchedTimeStr = '';
       const timeMatch = rawText.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/i);
       if (timeMatch) {
+        matchedTimeStr = timeMatch[0];
         let hour = parseInt(timeMatch[1]);
         let min = timeMatch[2] || '00';
         let ampm = timeMatch[3] ? timeMatch[3].toUpperCase() : '';
@@ -1700,7 +1821,26 @@
         time = `${hour}:${min} ${ampm}`;
       }
 
-      // Priority parsing
+      // Category Determination
+      const todayISO = now.toISOString().split('T')[0];
+      const tomorrowObj = new Date(now);
+      tomorrowObj.setDate(now.getDate() + 1);
+      const tomorrowISO = tomorrowObj.toISOString().split('T')[0];
+
+      const targetDateISO = targetDateObj.toISOString().split('T')[0];
+
+      let category = 'today';
+      if (targetDateISO === todayISO) {
+        category = 'today';
+      } else if (targetDateISO === tomorrowISO) {
+        category = 'tomorrow';
+      } else if (targetDateISO > tomorrowISO) {
+        const diffDays = Math.round((targetDateObj - now) / (1000 * 60 * 60 * 24));
+        if (diffDays <= 7) category = 'thisWeek';
+        else category = 'upcoming';
+      }
+
+      // Priority Parsing
       let priority = 'med';
       if (lower.includes('urgent') || lower.includes('asap') || lower.includes('high priority') || lower.includes('critical') || lower.includes('important')) {
         priority = 'high';
@@ -1712,19 +1852,26 @@
       let isMeeting = lower.includes('meeting') || lower.includes('call') || lower.includes('sync') || lower.includes('discussion');
       let type = isMeeting ? 'meeting' : 'task';
 
-      // People extraction
+      // People Extraction
       const people = [];
       if (lower.includes('rahul')) people.push('Rahul');
       if (lower.includes('hod')) people.push('HOD');
       if (lower.includes('alex')) people.push('Alex');
       if (lower.includes('client')) people.push('Client');
 
-      // Title cleaning
+      // Title Cleaning: Remove date & time strings
       let cleanedTitle = rawText;
-      cleanedTitle = cleanedTitle.replace(/^(tomorrow|today|this week|next week)\s*/i, '');
+      if (matchedDateStr) {
+        const dateRegex = new RegExp('\\b(on\\s+)?' + matchedDateStr.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'gi');
+        cleanedTitle = cleanedTitle.replace(dateRegex, '');
+      }
+      if (matchedTimeStr) {
+        const timeRegex = new RegExp('\\b(at\\s+)?' + matchedTimeStr.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'gi');
+        cleanedTitle = cleanedTitle.replace(timeRegex, '');
+      }
+
+      cleanedTitle = cleanedTitle.replace(/\b(tomorrow|today|this week|next week|on|at|urgent|asap|very important)\b/gi, '');
       cleanedTitle = cleanedTitle.replace(/^(i have a|i need to|i am having a|i have to|remind me to)\s*/i, '');
-      cleanedTitle = cleanedTitle.replace(/\b(at\s+)?\d{1,2}(?::\d{2})?\s*(am|pm)?\b/gi, '');
-      cleanedTitle = cleanedTitle.replace(/\burgent\.?\b|\basap\.?\b|\bvery important\.?\b/gi, '');
       cleanedTitle = cleanedTitle.trim().replace(/^[\s,.-]+|[\s,.-]+$/g, '');
 
       if (cleanedTitle.length > 0) {
@@ -1733,7 +1880,7 @@
         cleanedTitle = rawText;
       }
 
-      const targetDateISO = targetDateObj.toISOString().split('T')[0];
+      const formattedDateText = targetDateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
 
       return {
         title: cleanedTitle,
@@ -1741,6 +1888,7 @@
         priority: priority,
         category: category,
         targetDate: targetDateISO,
+        dateLabel: (category === 'today' ? 'Today' : (category === 'tomorrow' ? 'Tomorrow' : formattedDateText)),
         time: time,
         people: people
       };
@@ -1758,7 +1906,7 @@
       const input = document.getElementById('voiceTextInput');
       const text = input ? input.value.trim() : '';
       closeRecordModal(() => {
-        saveParsedInput(text || 'Meeting with HOD tomorrow at 8:00 AM urgent');
+        saveParsedInput(text || 'Meeting on 15th Aug 10:00 AM');
       });
     }
 
@@ -1771,6 +1919,7 @@
         priority: parsed.priority,
         category: parsed.category,
         targetDate: parsed.targetDate,
+        date: parsed.dateLabel,
         completed: false,
         people: parsed.people,
         time: parsed.time || '9:00 AM'
@@ -1832,8 +1981,9 @@
 
     function saveNewItem(item) {
       state.items.unshift(item);
-      switchView('dashboard');
-      showToast(`✦ Task Added & Scheduled at ${item.time}`);
+      if (item.category === 'today') switchView('dashboard');
+      else switchView('timeline');
+      showToast(`✦ Task Scheduled for ${item.date || item.category} at ${item.time}`);
     }
 
     // Modal Control Functions

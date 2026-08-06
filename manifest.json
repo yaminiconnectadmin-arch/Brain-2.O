@@ -1,8 +1,8 @@
 {
   "name": "ECHO — Your Life. Remembered.",
   "short_name": "Echo",
-  "start_url": ".",
-  "id": ".",
+  "start_url": "./index.html",
+  "id": "echo-pwa-app-id",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
@@ -34,7 +34,7 @@
       "name": "Quick Voice Record",
       "short_name": "Record",
       "description": "Instant 1-tap voice recording into Second Brain AI",
-      "url": "./?action=record",
+      "url": "./index.html?action=record",
       "icons": [
         {
           "src": "icon-192.png",
