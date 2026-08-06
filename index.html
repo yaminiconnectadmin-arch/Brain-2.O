@@ -55,12 +55,16 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* Lock body & HTML viewport to prevent page bounce */
     html, body {
       background-color: var(--bg-dark);
       color: var(--text-primary);
       width: 100%;
       height: 100%;
-      overflow-x: hidden;
+      height: 100dvh;
+      overflow: hidden;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
     }
 
     body {
@@ -107,10 +111,11 @@
         radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
     }
 
+    /* Fixed App Layout Frame */
     .app-frame {
       width: 100%;
       max-width: 520px;
-      height: 100vh;
+      height: 100%;
       height: 100dvh;
       max-height: 960px;
       background: var(--surface-dark);
@@ -136,8 +141,9 @@
       }
     }
 
-    /* PWA Mobile Banner */
+    /* PWA Mobile Banner - Fixed Top Element */
     .pwa-install-banner {
+      flex-shrink: 0;
       background: var(--gradient-echo);
       color: #fff;
       padding: 10px 16px;
@@ -147,7 +153,7 @@
       font-size: 12px;
       font-weight: 800;
       box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
-      z-index: 20;
+      z-index: 25;
     }
 
     .pwa-install-banner.hidden {
@@ -161,14 +167,16 @@
       }
     }
 
+    /* Non-Scrollable Fixed Header */
     .header {
+      flex-shrink: 0;
       padding: 14px 18px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(12, 14, 23, 0.94);
+      background: rgba(12, 14, 23, 0.96);
       backdrop-filter: blur(20px);
-      z-index: 10;
+      z-index: 20;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       padding-top: max(14px, env(safe-area-inset-top));
     }
@@ -260,8 +268,9 @@
 
     .header-btn:hover { border-color: var(--cyan); transform: translateY(-2px); }
 
-    /* Desktop Navigation Tabs */
+    /* Desktop Navigation Tabs - Fixed Non-Scrollable Header Element */
     .nav-tabs {
+      flex-shrink: 0;
       display: flex;
       padding: 10px 16px;
       gap: 8px;
@@ -308,9 +317,13 @@
       font-weight: 800;
     }
 
+    /* ONLY THE CONTENT AREA SCROLLS */
     .content-area {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -320,7 +333,7 @@
 
     /* Dedicated Scroll Clearance Spacer */
     .bottom-scroll-spacer {
-      height: 130px;
+      height: 70px;
       flex-shrink: 0;
       width: 100%;
       pointer-events: none;
@@ -532,7 +545,7 @@
     .action-btn:hover { color: var(--cyan); }
     .delete-btn:hover { color: var(--priority-high); }
 
-    /* Floating AI Mic Button (Safe Positioned) */
+    /* Floating AI Mic Button */
     .floating-record-container {
       position: absolute;
       bottom: 74px;
@@ -574,10 +587,10 @@
 
     .floating-record-btn:hover { transform: scale(1.08); }
 
-    /* Mobile Bottom Navigation Bar */
+    /* Non-Scrollable Stationary Bottom Navigation Bar */
     .mobile-bottom-nav {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
+      flex-shrink: 0;
+      position: relative;
       background: rgba(12, 14, 23, 0.98);
       backdrop-filter: blur(22px);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -860,7 +873,7 @@
   <div id="ambientBg" class="ambient-background"></div>
 
   <div class="app-frame">
-    <!-- PWA Mobile Install Banner -->
+    <!-- PWA Mobile Install Banner (Non-scrollable Top Header Element) -->
     <div id="pwaBanner" class="pwa-install-banner">
       <span style="display:flex; align-items:center; gap:8px;">
         <img src="logo.png" style="width:22px; height:22px; border-radius:6px;" alt="Logo" />
@@ -872,7 +885,7 @@
     <!-- Toast Notification -->
     <div id="toastMsg" class="toast">✦ Task Updated</div>
 
-    <!-- Header -->
+    <!-- Non-Scrollable Stationary Header -->
     <div class="header">
       <div class="brand-container">
         <img src="logo.png" class="brand-logo-img" alt="ECHO Official Logo" />
@@ -890,7 +903,7 @@
       </div>
     </div>
 
-    <!-- Top Navigation Tabs (Desktop/Tablet) -->
+    <!-- Top Navigation Tabs (Desktop/Tablet Header) -->
     <div class="nav-tabs">
       <button id="tab-dashboard" class="tab-btn active" onclick="switchView('dashboard')">🏠 Today</button>
       <button id="tab-timeline" class="tab-btn" onclick="switchView('timeline')">⏳ Timeline</button>
@@ -899,7 +912,7 @@
       <button id="tab-search" class="tab-btn" onclick="switchView('search')">🔍 Search</button>
     </div>
 
-    <!-- Main Content Body -->
+    <!-- ONLY THIS MAIN CONTENT AREA SCROLLS -->
     <div id="mainContent" class="content-area"></div>
 
     <!-- Floating Record Mic Button -->
@@ -907,7 +920,7 @@
       <button class="floating-record-btn" onclick="openRecordModal()" title="Speak to Echo AI">🎙️</button>
     </div>
 
-    <!-- Mobile Bottom Navigation Bar -->
+    <!-- Non-Scrollable Stationary Mobile Bottom Navigation Bar -->
     <div class="mobile-bottom-nav">
       <button id="mnav-dashboard" class="mobile-nav-item active" onclick="switchView('dashboard')">
         <span class="mobile-nav-icon">🏠</span>
