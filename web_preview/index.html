@@ -254,7 +254,7 @@
 
     .header-btn:hover { border-color: var(--cyan); transform: translateY(-2px); }
 
-    /* Desktop Navigation Tabs (Hidden on Mobile for zero clumsiness) */
+    /* Desktop Navigation Tabs */
     .nav-tabs {
       display: flex;
       padding: 10px 16px;
@@ -313,12 +313,12 @@
       scroll-behavior: smooth;
     }
 
-    /* Clean Spacious Cards */
+    /* Spacious Glass Cards */
     .glass-card {
       background: var(--card-dark);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 20px;
+      padding: 18px 20px;
       backdrop-filter: blur(18px);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
       transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
@@ -405,15 +405,21 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 4px;
+      margin-top: 6px;
       margin-bottom: 2px;
     }
 
-    .task-item {
+    /* REDESIGNED SPACIOUS TASK CARD (NO WRAPPING ISSUES) */
+    .task-card-inner {
       display: flex;
-      align-items: center;
-      gap: 14px;
-      min-height: 48px;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-top-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
     }
 
     .task-checkbox {
@@ -426,6 +432,7 @@
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
+      margin-top: 2px;
       transition: all 0.2s ease;
     }
 
@@ -437,33 +444,36 @@
       font-size: 15px;
     }
 
-    .task-content {
+    .task-title-text {
       flex: 1;
-      cursor: pointer;
-      min-width: 0;
-    }
-
-    .task-title {
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
       color: var(--text-primary);
-      word-break: break-word;
       line-height: 1.4;
+      overflow-wrap: break-word;
+      word-break: normal;
+      cursor: pointer;
     }
 
-    .task-title.completed {
+    .task-title-text.completed {
       text-decoration: line-through;
       color: var(--text-muted);
     }
 
-    .task-meta {
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-top: 5px;
+    .task-action-btns {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .task-bottom-row {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
+      margin-top: 2px;
+      padding-left: 38px;
     }
 
     .priority-badge {
@@ -494,12 +504,15 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
-      padding: 6px 10px;
+      padding: 6px;
       border-radius: 10px;
-      min-width: 36px;
-      min-height: 36px;
+      min-width: 32px;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .action-btn:hover { color: var(--cyan); }
@@ -1176,7 +1189,7 @@
     }
 
     // State Management
-    const STORAGE_KEY = 'echo_app_state_v15';
+    const STORAGE_KEY = 'echo_app_state_v16';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1439,7 +1452,7 @@
             <span style="font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;" onclick="editUserName()" title="Edit Name">✏️ ${state.userName || 'Yamini'}</span>
           </div>
 
-          <!-- Integrated AI Natural Input Input Bar -->
+          <!-- Integrated AI Natural Input Bar -->
           <div class="quick-input-row">
             <input type="text" id="quickAddInput" class="quick-input-field" placeholder="e.g. 'Meeting on 15th Aug 10:00 AM'" onkeydown="if(event.key==='Enter') quickAddTaskFromInput()" />
             <button class="quick-add-btn" onclick="quickAddTaskFromInput()">+ Add Task</button>
@@ -1496,26 +1509,31 @@
       render();
     }
 
+    // REDESIGNED SPACIOUS TASK CARD RENDERER (NO MID-WORD BREAKING)
     function renderTaskCard(item) {
       return `
         <div class="glass-card swipeable-task-card" data-task-id="${item.id}">
-          <div class="task-item">
-            <div class="task-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleTask(${item.id})">
-              ${item.completed ? '✓' : ''}
-            </div>
-            <div class="task-content" onclick="toggleTask(${item.id})">
-              <div class="task-title ${item.completed ? 'completed' : ''}">${item.title}</div>
-              <div class="task-meta">
-                ${item.type === 'meeting' ? '📅 Meeting • ' : ''}
-                ${item.people && item.people.length ? '👤 ' + item.people.join(', ') + ' • ' : ''}
-                ${item.time ? '🕒 ' + item.time + ' • ' : ''}
-                <strong style="color:var(--cyan);">${item.date || item.category}</strong>
+          <div class="task-card-inner">
+            <div class="task-top-row">
+              <div class="task-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleTask(${item.id})">
+                ${item.completed ? '✓' : ''}
+              </div>
+              <div class="task-title-text ${item.completed ? 'completed' : ''}" onclick="toggleTask(${item.id})">
+                ${item.title}
+              </div>
+              <div class="task-action-btns">
+                <button class="action-btn" onclick="openEditModal(${item.id})" title="Edit Task">✏️</button>
+                <button class="action-btn delete-btn" onclick="deleteTask(${item.id})" title="Delete Task">✕</button>
               </div>
             </div>
-            ${item.time ? `<span class="time-badge">${item.time}</span>` : ''}
-            <span class="priority-badge priority-${item.priority}">${item.priority}</span>
-            <button class="action-btn" onclick="openEditModal(${item.id})" title="Edit Task">✏️</button>
-            <button class="action-btn delete-btn" onclick="deleteTask(${item.id})" title="Delete Task">✕</button>
+
+            <div class="task-bottom-row">
+              ${item.type === 'meeting' ? '<span style="font-size:11px; color:var(--cyan); font-weight:700;">📅 Meeting</span>' : ''}
+              ${item.people && item.people.length ? '<span style="font-size:11px; color:var(--text-secondary);">👤 ' + item.people.join(', ') + '</span>' : ''}
+              ${item.time ? `<span class="time-badge">🕒 ${item.time}</span>` : ''}
+              <span class="priority-badge priority-${item.priority}">${item.priority}</span>
+              <span style="font-size:11px; font-weight:800; color:var(--cyan); margin-left:auto;">${item.date || item.category}</span>
+            </div>
           </div>
         </div>
       `;
