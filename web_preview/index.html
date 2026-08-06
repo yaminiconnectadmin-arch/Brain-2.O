@@ -1237,10 +1237,18 @@
       items: []
     };
 
+    function toLocalISO(dateObj) {
+      const d = dateObj || new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
     function getOffsetISO(offsetDays) {
       const d = new Date();
       d.setDate(d.getDate() + offsetDays);
-      return d.toISOString().split('T')[0];
+      return toLocalISO(d);
     }
 
     let state = JSON.parse(JSON.stringify(defaultState));
@@ -1289,11 +1297,11 @@
     function reevaluateCategories() {
       if (!state || !state.items) return;
       const todayDate = new Date();
-      const todayISO = todayDate.toISOString().split('T')[0];
+      const todayISO = toLocalISO(todayDate);
 
       const tomorrowObj = new Date();
       tomorrowObj.setDate(todayDate.getDate() + 1);
-      const tomorrowISO = tomorrowObj.toISOString().split('T')[0];
+      const tomorrowISO = toLocalISO(tomorrowObj);
 
       state.items.forEach(item => {
         if (!item.targetDate) {
@@ -1322,7 +1330,7 @@
 
     function updateDateAndClock() {
       const now = new Date();
-      const isoToday = now.toISOString().split('T')[0];
+      const isoToday = toLocalISO(now);
 
       if (state.lastActiveDate && state.lastActiveDate !== isoToday) {
         runMidnightRollover(isoToday);
@@ -1735,11 +1743,11 @@
     // Calendar View
     let currentCalendarYear = new Date().getFullYear();
     let currentCalendarMonth = new Date().getMonth();
-    let selectedCalendarISO = new Date().toISOString().split('T')[0];
+    let selectedCalendarISO = toLocalISO(new Date());
 
     function renderCalendar(container) {
       reevaluateCategories();
-      const todayISO = new Date().toISOString().split('T')[0];
+      const todayISO = toLocalISO(new Date());
       const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       const currentMonthName = monthNames[currentCalendarMonth];
 
@@ -2067,30 +2075,41 @@
         }
       }
 
-      // Time Parsing
+      // Time Parsing: Avoid matching ordinal numbers (15th, 1st) or plain day numbers
       let time = '';
       let matchedTimeStr = '';
-      const timeMatch = rawText.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/i);
-      if (timeMatch) {
-        matchedTimeStr = timeMatch[0];
-        let hour = parseInt(timeMatch[1]);
-        let min = timeMatch[2] || '00';
-        let ampm = timeMatch[3] ? timeMatch[3].toUpperCase() : '';
-        if (!ampm) {
-          if (lower.includes('morning') || lower.includes('am')) ampm = 'AM';
-          else if (lower.includes('evening') || lower.includes('night') || lower.includes('pm')) ampm = 'PM';
-          else ampm = (hour >= 8 && hour <= 11) ? 'AM' : 'PM';
-        }
+      
+      const matchWithColon = rawText.match(/\b(\d{1,2}):(\d{2})\s*(am|pm)?\b/i);
+      const matchWithAmpm = rawText.match(/\b(\d{1,2})\s*(am|pm)\b/i);
+      const matchWithAt = rawText.match(/\bat\s+(\d{1,2})\b/i);
+
+      if (matchWithColon) {
+        matchedTimeStr = matchWithColon[0];
+        let hour = parseInt(matchWithColon[1]);
+        let min = matchWithColon[2] || '00';
+        let ampm = matchWithColon[3] ? matchWithColon[3].toUpperCase() : (hour >= 12 ? 'PM' : 'AM');
+        if (hour > 12) hour = hour - 12;
+        if (hour === 0) hour = 12;
         time = `${hour}:${min} ${ampm}`;
+      } else if (matchWithAmpm) {
+        matchedTimeStr = matchWithAmpm[0];
+        let hour = parseInt(matchWithAmpm[1]);
+        let ampm = matchWithAmpm[2].toUpperCase();
+        time = `${hour}:00 ${ampm}`;
+      } else if (matchWithAt) {
+        matchedTimeStr = matchWithAt[0];
+        let hour = parseInt(matchWithAt[1]);
+        let ampm = (hour >= 8 && hour <= 11) ? 'AM' : 'PM';
+        time = `${hour}:00 ${ampm}`;
       }
 
       // Category Determination
-      const todayISO = now.toISOString().split('T')[0];
+      const todayISO = toLocalISO(now);
       const tomorrowObj = new Date(now);
       tomorrowObj.setDate(now.getDate() + 1);
-      const tomorrowISO = tomorrowObj.toISOString().split('T')[0];
+      const tomorrowISO = toLocalISO(tomorrowObj);
 
-      const targetDateISO = targetDateObj.toISOString().split('T')[0];
+      const targetDateISO = toLocalISO(targetDateObj);
 
       let category = 'today';
       if (targetDateISO === todayISO) {
