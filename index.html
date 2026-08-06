@@ -312,11 +312,18 @@
       flex: 1;
       overflow-y: auto;
       padding: 16px;
-      padding-bottom: 140px;
       display: flex;
       flex-direction: column;
       gap: 16px;
       scroll-behavior: smooth;
+    }
+
+    /* Dedicated Scroll Clearance Spacer */
+    .bottom-scroll-spacer {
+      height: 130px;
+      flex-shrink: 0;
+      width: 100%;
+      pointer-events: none;
     }
 
     /* High Contrast Glass Cards */
@@ -480,7 +487,7 @@
       flex-wrap: wrap;
       margin-top: 2px;
       padding-left: 38px;
-      padding-right: 50px; /* Safe Padding so date badge NEVER gets clipped by Floating Mic FAB */
+      padding-right: 50px;
     }
 
     .priority-badge {
@@ -530,7 +537,7 @@
       position: absolute;
       bottom: 74px;
       right: 14px;
-      z-index: 90;
+      z-index: 110;
     }
 
     .floating-record-btn {
@@ -571,14 +578,14 @@
     .mobile-bottom-nav {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      background: rgba(12, 14, 23, 0.96);
+      background: rgba(12, 14, 23, 0.98);
       backdrop-filter: blur(22px);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
-      justify-content: space-around;
+      justify-style: space-around;
       align-items: center;
       padding: 8px 12px max(14px, env(safe-area-inset-bottom));
-      z-index: 80;
+      z-index: 100;
     }
 
     .mobile-nav-item {
@@ -602,7 +609,7 @@
     .mobile-nav-item.active {
       color: var(--cyan);
       font-weight: 800;
-      background: rgba(56, 189, 248, 0.08);
+      background: rgba(56, 189, 248, 0.12);
     }
 
     .mobile-nav-icon { font-size: 19px; }
@@ -613,7 +620,7 @@
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(6, 7, 11, 0.92);
       backdrop-filter: blur(18px);
-      z-index: 100;
+      z-index: 200;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -722,7 +729,7 @@
       font-size: 13px;
       font-weight: 700;
       box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7);
-      z-index: 150;
+      z-index: 250;
       display: none;
     }
 
@@ -1205,7 +1212,7 @@
     }
 
     // State Management
-    const STORAGE_KEY = 'echo_app_state_v18';
+    const STORAGE_KEY = 'echo_app_state_v19';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1515,6 +1522,7 @@
         ` : upcomingItems.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">RECORD. UNDERSTAND. PLAN. ACHIEVE.</div>
+        <div class="bottom-scroll-spacer"></div>
       `;
 
       attachSwipeListeners();
@@ -1706,6 +1714,7 @@
         ` : filtered.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">YOUR LIFE. REMEMBERED.</div>
+        <div class="bottom-scroll-spacer"></div>
       `;
       attachSwipeListeners();
     }
@@ -1825,6 +1834,7 @@
         ` : dayTasks.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">SMART CALENDAR. PERFECT TIMING.</div>
+        <div class="bottom-scroll-spacer"></div>
       `;
       attachSwipeListeners();
     }
@@ -1879,6 +1889,7 @@
         </button>
 
         <div class="echo-footer-tagline">RECORD. UNDERSTAND. PLAN. ACHIEVE.</div>
+        <div class="bottom-scroll-spacer"></div>
       `;
     }
 
@@ -1904,6 +1915,7 @@
         ` : results.map(item => renderTaskCard(item)).join('')}
 
         <div class="echo-footer-tagline">YOUR LIFE. REMEMBERED.</div>
+        <div class="bottom-scroll-spacer"></div>
       `;
       attachSwipeListeners();
     }
