@@ -1225,7 +1225,7 @@
     }
 
     // State Management
-    const STORAGE_KEY = 'echo_app_state_v19';
+    const STORAGE_KEY = 'echo_app_state_v20';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1234,12 +1234,7 @@
       energyFilter: 'all',
       searchQuery: '',
       lastActiveDate: '',
-      items: [
-        { id: 101, title: "Meeting with HOD", type: "meeting", priority: "high", category: "tomorrow", completed: false, people: ["HOD"], date: "Tomorrow", time: "8:00 AM", targetDate: getOffsetISO(1) },
-        { id: 102, title: "Finish presentation deck & review", type: "task", priority: "high", category: "today", completed: false, people: [], date: "Today", time: "2:00 PM", targetDate: getOffsetISO(0) },
-        { id: 103, title: "Call Rahul regarding proposal", type: "task", priority: "med", category: "today", completed: true, people: ["Rahul"], date: "Today", time: "11:00 AM", targetDate: getOffsetISO(0) },
-        { id: 104, title: "Send formal project proposal", type: "task", priority: "med", category: "tomorrow", completed: false, people: [], date: "Tomorrow", time: "5:00 PM", targetDate: getOffsetISO(1) }
-      ]
+      items: []
     };
 
     function getOffsetISO(offsetDays) {
