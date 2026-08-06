@@ -1,8 +1,9 @@
-const CACHE_NAME = 'echo-pwa-v11-standalone';
+const CACHE_NAME = 'echo-pwa-v12-standalone';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './logo.png',
   './icon.svg',
   './icon-192.png',
   './icon-512.png'

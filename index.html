@@ -237,6 +237,12 @@
 
     .install-header-btn:hover { transform: scale(1.04); }
 
+    @media (max-width: 540px) {
+      .install-header-btn {
+        display: none !important;
+      }
+    }
+
     .header-btn {
       background: var(--card-dark);
       border: 1px solid var(--card-border);
@@ -306,7 +312,7 @@
       flex: 1;
       overflow-y: auto;
       padding: 16px;
-      padding-bottom: 140px; /* Expanded bottom scroll padding to guarantee ZERO MIC FAB OVERLAP */
+      padding-bottom: 140px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -409,7 +415,7 @@
       margin-bottom: 2px;
     }
 
-    /* REDESIGNED SPACIOUS TASK CARD (NO WRAPPING OR DUPLICATION ISSUES) */
+    /* REDESIGNED SPACIOUS TASK CARD */
     .task-card-inner {
       display: flex;
       flex-direction: column;
@@ -474,6 +480,7 @@
       flex-wrap: wrap;
       margin-top: 2px;
       padding-left: 38px;
+      padding-right: 50px; /* Safe Padding so date badge NEVER gets clipped by Floating Mic FAB */
     }
 
     .priority-badge {
@@ -521,24 +528,24 @@
     /* Floating AI Mic Button (Safe Positioned) */
     .floating-record-container {
       position: absolute;
-      bottom: 80px;
-      right: 18px;
+      bottom: 74px;
+      right: 14px;
       z-index: 90;
     }
 
     .floating-record-btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 28px;
+      width: 52px;
+      height: 52px;
+      border-radius: 26px;
       background: var(--gradient-echo);
       border: 2px solid rgba(255, 255, 255, 0.5);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 22px;
       cursor: pointer;
-      box-shadow: 0 12px 28px rgba(99, 102, 241, 0.65), 0 0 28px rgba(56, 189, 248, 0.45);
+      box-shadow: 0 10px 24px rgba(99, 102, 241, 0.65), 0 0 24px rgba(56, 189, 248, 0.45);
       transition: transform 0.25s ease;
       position: relative;
     }
@@ -546,8 +553,8 @@
     .floating-record-btn::before {
       content: '';
       position: absolute;
-      top: -6px; left: -6px; right: -6px; bottom: -6px;
-      border-radius: 34px;
+      top: -5px; left: -5px; right: -5px; bottom: -5px;
+      border-radius: 31px;
       border: 2px solid var(--cyan);
       opacity: 0.6;
       animation: fabPulse 2.4s infinite ease-out;
@@ -568,7 +575,7 @@
       backdrop-filter: blur(22px);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
-      justify-style: space-around;
+      justify-content: space-around;
       align-items: center;
       padding: 8px 12px max(14px, env(safe-area-inset-bottom));
       z-index: 80;
@@ -1198,7 +1205,7 @@
     }
 
     // State Management
-    const STORAGE_KEY = 'echo_app_state_v17';
+    const STORAGE_KEY = 'echo_app_state_v18';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1518,7 +1525,7 @@
       render();
     }
 
-    // REDESIGNED SPACIOUS TASK CARD RENDERER (CLEAN DEDUPLICATED METADATA)
+    // REDESIGNED SPACIOUS TASK CARD RENDERER
     function renderTaskCard(item) {
       return `
         <div class="glass-card swipeable-task-card" data-task-id="${item.id}">
