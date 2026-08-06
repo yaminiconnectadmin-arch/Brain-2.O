@@ -23,9 +23,9 @@
     :root {
       --bg-dark: #06070b;
       --surface-dark: #0c0e17;
-      --card-dark: rgba(16, 20, 32, 0.85);
-      --card-border: rgba(56, 189, 248, 0.2);
-      --card-border-glow: rgba(168, 85, 247, 0.45);
+      --card-dark: rgba(15, 23, 42, 0.88);
+      --card-border: rgba(56, 189, 248, 0.35);
+      --card-border-glow: rgba(168, 85, 247, 0.55);
       
       --cyan: #38bdf8;
       --indigo: #6366f1;
@@ -36,15 +36,15 @@
       --rose: #f43f5e;
 
       --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
       
       --priority-high: #ff453a;
       --priority-med: #ff9f0a;
       --priority-low: #30d158;
 
       --gradient-echo: linear-gradient(135deg, #38bdf8 0%, #6366f1 40%, #a855f7 75%, #ec4899 100%);
-      --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+      --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
     }
 
     * {
@@ -166,10 +166,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(12, 14, 23, 0.92);
-      backdrop-filter: blur(18px);
+      background: rgba(12, 14, 23, 0.94);
+      backdrop-filter: blur(20px);
       z-index: 10;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       padding-top: max(14px, env(safe-area-inset-top));
     }
 
@@ -306,28 +306,28 @@
       flex: 1;
       overflow-y: auto;
       padding: 16px;
-      padding-bottom: 90px;
+      padding-bottom: 140px; /* Expanded bottom scroll padding to guarantee ZERO MIC FAB OVERLAP */
       display: flex;
       flex-direction: column;
       gap: 16px;
       scroll-behavior: smooth;
     }
 
-    /* Spacious Glass Cards */
+    /* High Contrast Glass Cards */
     .glass-card {
       background: var(--card-dark);
       border: 1px solid var(--card-border);
       border-radius: 24px;
       padding: 18px 20px;
-      backdrop-filter: blur(18px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
       transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
       position: relative;
       touch-action: pan-y;
       user-select: none;
     }
 
-    .glass-card:hover { border-color: rgba(56, 189, 248, 0.45); }
+    .glass-card:hover { border-color: rgba(56, 189, 248, 0.55); }
 
     .glass-card.swiping-right {
       background: rgba(16, 185, 129, 0.25) !important;
@@ -341,7 +341,7 @@
 
     /* Executive Focus Energy Engine */
     .focus-energy-card {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.15));
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(168, 85, 247, 0.18));
       border: 1px solid var(--card-border-glow);
       border-radius: 24px;
       padding: 18px 20px;
@@ -373,7 +373,7 @@
     .quick-input-field {
       flex: 1;
       background: rgba(6, 7, 11, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 14px;
       padding: 12px 16px;
       color: #fff;
@@ -409,7 +409,7 @@
       margin-bottom: 2px;
     }
 
-    /* REDESIGNED SPACIOUS TASK CARD (NO WRAPPING ISSUES) */
+    /* REDESIGNED SPACIOUS TASK CARD (NO WRAPPING OR DUPLICATION ISSUES) */
     .task-card-inner {
       display: flex;
       flex-direction: column;
@@ -518,25 +518,25 @@
     .action-btn:hover { color: var(--cyan); }
     .delete-btn:hover { color: var(--priority-high); }
 
-    /* Floating AI Mic Button */
+    /* Floating AI Mic Button (Safe Positioned) */
     .floating-record-container {
       position: absolute;
-      bottom: 72px;
+      bottom: 80px;
       right: 18px;
       z-index: 90;
     }
 
     .floating-record-btn {
-      width: 58px;
-      height: 58px;
-      border-radius: 29px;
+      width: 56px;
+      height: 56px;
+      border-radius: 28px;
       background: var(--gradient-echo);
       border: 2px solid rgba(255, 255, 255, 0.5);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
+      font-size: 24px;
       cursor: pointer;
       box-shadow: 0 12px 28px rgba(99, 102, 241, 0.65), 0 0 28px rgba(56, 189, 248, 0.45);
       transition: transform 0.25s ease;
@@ -547,7 +547,7 @@
       content: '';
       position: absolute;
       top: -6px; left: -6px; right: -6px; bottom: -6px;
-      border-radius: 35px;
+      border-radius: 34px;
       border: 2px solid var(--cyan);
       opacity: 0.6;
       animation: fabPulse 2.4s infinite ease-out;
@@ -828,7 +828,16 @@
       border-color: transparent;
     }
 
-    .timeline-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+    .timeline-chips { 
+      display: flex; 
+      gap: 8px; 
+      overflow-x: auto; 
+      padding: 6px 4px 10px 4px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .timeline-chips::-webkit-scrollbar { display: none; }
   </style>
 </head>
 <body>
@@ -895,7 +904,7 @@
         <span>Timeline</span>
       </button>
       <button id="mnav-calendar" class="mobile-nav-item" onclick="switchView('calendar')">
-        <span class="mobile-nav-icon">📅</span>
+        <span class="mobile-nav-icon" id="mnav-cal-icon">📅</span>
         <span>Calendar</span>
       </button>
       <button id="mnav-night" class="mobile-nav-item" onclick="switchView('night')">
@@ -1189,7 +1198,7 @@
     }
 
     // State Management
-    const STORAGE_KEY = 'echo_app_state_v16';
+    const STORAGE_KEY = 'echo_app_state_v17';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1509,7 +1518,7 @@
       render();
     }
 
-    // REDESIGNED SPACIOUS TASK CARD RENDERER (NO MID-WORD BREAKING)
+    // REDESIGNED SPACIOUS TASK CARD RENDERER (CLEAN DEDUPLICATED METADATA)
     function renderTaskCard(item) {
       return `
         <div class="glass-card swipeable-task-card" data-task-id="${item.id}">
@@ -1675,7 +1684,7 @@
 
       container.innerHTML = `
         <div class="section-title">Smart Timeline</div>
-        <div class="timeline-chips" style="margin-bottom:14px;">
+        <div class="timeline-chips">
           ${['all', 'today', 'tomorrow', 'thisWeek', 'completed'].map(c => `
             <button class="chip-btn ${filter === c ? 'active' : ''}" onclick="setTimelineFilter('${c}')">
               ${c === 'all' ? 'All' : c.charAt(0).toUpperCase() + c.slice(1)}
