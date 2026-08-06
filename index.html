@@ -140,7 +140,7 @@
     .pwa-install-banner {
       background: var(--gradient-echo);
       color: #fff;
-      padding: 12px 18px;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -162,7 +162,7 @@
     }
 
     .header {
-      padding: 16px 20px 12px;
+      padding: 14px 18px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -170,18 +170,18 @@
       backdrop-filter: blur(18px);
       z-index: 10;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-top: max(16px, env(safe-area-inset-top));
+      padding-top: max(14px, env(safe-area-inset-top));
     }
 
     .brand-container {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-logo-img {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 12px;
       object-fit: cover;
       filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
@@ -195,7 +195,7 @@
 
     .brand-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: lowercase;
@@ -205,7 +205,7 @@
     }
 
     .brand-tagline {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 800;
       letter-spacing: 1.5px;
       color: var(--text-secondary);
@@ -232,7 +232,7 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      min-height: 38px;
+      min-height: 36px;
     }
 
     .install-header-btn:hover { transform: scale(1.04); }
@@ -241,11 +241,11 @@
       background: var(--card-dark);
       border: 1px solid var(--card-border);
       color: var(--text-primary);
-      width: 40px;
-      height: 40px;
-      border-radius: 13px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -254,7 +254,7 @@
 
     .header-btn:hover { border-color: var(--cyan); transform: translateY(-2px); }
 
-    /* Top Navigation Tabs */
+    /* Desktop Navigation Tabs (Hidden on Mobile for zero clumsiness) */
     .nav-tabs {
       display: flex;
       padding: 10px 16px;
@@ -266,6 +266,12 @@
     }
 
     .nav-tabs::-webkit-scrollbar { display: none; }
+
+    @media (max-width: 540px) {
+      .nav-tabs {
+        display: none !important;
+      }
+    }
 
     .tab-btn {
       flex: 1;
@@ -299,15 +305,15 @@
     .content-area {
       flex: 1;
       overflow-y: auto;
-      padding: 18px 16px;
-      padding-bottom: 140px;
+      padding: 16px;
+      padding-bottom: 90px;
       display: flex;
       flex-direction: column;
       gap: 16px;
       scroll-behavior: smooth;
     }
 
-    /* Swipeable Task Card */
+    /* Clean Spacious Cards */
     .glass-card {
       background: var(--card-dark);
       border: 1px solid var(--card-border);
@@ -357,17 +363,11 @@
       transition: width 0.6s ease;
     }
 
-    .quick-input-card {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(99, 102, 241, 0.16));
-      border: 1px solid rgba(56, 189, 248, 0.38);
-      padding: 16px 18px;
-      border-radius: 22px;
-    }
-
     .quick-input-row {
       display: flex;
       gap: 10px;
       align-items: center;
+      margin-top: 12px;
     }
 
     .quick-input-field {
@@ -505,25 +505,25 @@
     .action-btn:hover { color: var(--cyan); }
     .delete-btn:hover { color: var(--priority-high); }
 
-    /* Floating AI Mic Button with Multi-Ring Particle Animation */
+    /* Floating AI Mic Button */
     .floating-record-container {
       position: absolute;
-      bottom: 120px;
-      right: 20px;
+      bottom: 72px;
+      right: 18px;
       z-index: 90;
     }
 
     .floating-record-btn {
-      width: 64px;
-      height: 64px;
-      border-radius: 32px;
+      width: 58px;
+      height: 58px;
+      border-radius: 29px;
       background: var(--gradient-echo);
       border: 2px solid rgba(255, 255, 255, 0.5);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 26px;
       cursor: pointer;
       box-shadow: 0 12px 28px rgba(99, 102, 241, 0.65), 0 0 28px rgba(56, 189, 248, 0.45);
       transition: transform 0.25s ease;
@@ -533,67 +533,19 @@
     .floating-record-btn::before {
       content: '';
       position: absolute;
-      top: -8px; left: -8px; right: -8px; bottom: -8px;
-      border-radius: 40px;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border-radius: 35px;
       border: 2px solid var(--cyan);
       opacity: 0.6;
       animation: fabPulse 2.4s infinite ease-out;
     }
 
-    .floating-record-btn::after {
-      content: '';
-      position: absolute;
-      top: -16px; left: -16px; right: -16px; bottom: -16px;
-      border-radius: 48px;
-      border: 1px dashed var(--purple);
-      opacity: 0.4;
-      animation: fabPulseRotate 6s infinite linear;
-    }
-
     @keyframes fabPulse {
       0% { transform: scale(0.9); opacity: 0.8; }
-      100% { transform: scale(1.35); opacity: 0; }
-    }
-
-    @keyframes fabPulseRotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      100% { transform: scale(1.3); opacity: 0; }
     }
 
     .floating-record-btn:hover { transform: scale(1.08); }
-
-    /* Ergonomic Floating Quick Action Dock */
-    .floating-quick-dock {
-      position: absolute;
-      bottom: 68px; left: 16px; right: 16px;
-      background: rgba(16, 20, 32, 0.92);
-      backdrop-filter: blur(18px);
-      border: 1px solid var(--card-border-glow);
-      border-radius: 20px;
-      padding: 8px 12px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 85;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    }
-
-    .dock-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-    }
-
-    .dock-btn:hover { color: var(--cyan); background: rgba(56, 189, 248, 0.1); }
 
     /* Mobile Bottom Navigation Bar */
     .mobile-bottom-nav {
@@ -876,9 +828,9 @@
     <div id="pwaBanner" class="pwa-install-banner">
       <span style="display:flex; align-items:center; gap:8px;">
         <img src="logo.png" style="width:22px; height:22px; border-radius:6px;" alt="Logo" />
-        <span>Download Echo app to phone</span>
+        <span>Install Echo Web App on Phone</span>
       </span>
-      <button class="quick-add-btn" style="padding:5px 14px; font-size:11px; min-height:32px;" onclick="downloadStandaloneAppFile()">📥 Download App</button>
+      <button class="quick-add-btn" style="padding:5px 14px; font-size:11px; min-height:32px;" onclick="triggerOneTapInstall()">📲 Install Web App</button>
     </div>
 
     <!-- Toast Notification -->
@@ -894,8 +846,8 @@
         </div>
       </div>
       <div class="header-actions">
-        <button id="installHeaderBtn" class="install-header-btn" onclick="downloadStandaloneAppFile()" title="Download Offline Mobile App">
-          📥 Download App
+        <button id="installHeaderBtn" class="install-header-btn" onclick="openInstallModal()" title="Install Mobile Web App">
+          📲 Add Web App
         </button>
         <button class="header-btn" onclick="openBackupModal()" title="Backup & Settings">⚙️</button>
         <button class="header-btn" onclick="openRecordModal()" title="Voice Record">🎙️</button>
@@ -917,13 +869,6 @@
     <!-- Floating Record Mic Button -->
     <div class="floating-record-container">
       <button class="floating-record-btn" onclick="openRecordModal()" title="Speak to Echo AI">🎙️</button>
-    </div>
-
-    <!-- Floating Quick Action Dock -->
-    <div class="floating-quick-dock">
-      <button class="dock-btn" onclick="openRecordModal()">🎙️ Voice Note</button>
-      <button class="dock-btn" onclick="focusQuickAdd()">+ Quick Task</button>
-      <button class="dock-btn" style="color:var(--cyan);" onclick="downloadStandaloneAppFile()">📥 App File</button>
     </div>
 
     <!-- Mobile Bottom Navigation Bar -->
@@ -957,29 +902,26 @@
       <div class="modal-header">
         <div class="modal-title" style="display:flex; align-items:center; gap:10px;">
           <img src="logo.png" style="width:28px; height:28px; border-radius:8px;" alt="Logo" />
-          <span>Download & Install Echo App</span>
+          <span>Install Echo Web App</span>
         </div>
         <button class="modal-close-btn" onclick="closeInstallModal()">✕</button>
       </div>
       <div class="glass-card" style="margin-bottom:14px; text-align:center;">
         <img src="logo.png" style="width:72px; height:72px; border-radius:20px; box-shadow:0 8px 24px rgba(56,189,248,0.5); margin-bottom:12px;" alt="Official Logo" />
-        <div style="font-size:18px; font-weight:900; color:#fff;">Install Official Echo App</div>
+        <div style="font-size:18px; font-weight:900; color:#fff;">Add Echo to Home Screen</div>
         <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">
-          Fast offline access, zero lag, and instant launch directly from your phone home screen!
+          Install Echo directly on your phone's home screen with instant launch and zero lag!
         </div>
       </div>
       
       <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
-        <button class="tab-btn active" style="width:100%; padding:14px; font-size:13px; font-weight:800; min-height:48px;" onclick="downloadStandaloneAppFile()">
-          📥 Direct 1-Tap Download Standalone App (.html / PWA)
-        </button>
-        <button class="tab-btn" style="width:100%; padding:12px; font-size:12px; font-weight:700; color:var(--cyan); border-color:var(--cyan); min-height:44px;" onclick="triggerOneTapInstall()">
-          📲 Trigger Browser Native PWA Engine
+        <button class="tab-btn active" style="width:100%; padding:14px; font-size:13px; font-weight:800; min-height:48px;" onclick="triggerOneTapInstall()">
+          📲 Install Web App Now
         </button>
       </div>
 
       <div class="glass-card" style="margin-bottom:12px;">
-        <div style="font-size:12px; font-weight:800; color:var(--cyan); margin-bottom:6px;">🍎 IPHONE (SAFARI) STEPS:</div>
+        <div style="font-size:12px; font-weight:800; color:var(--cyan); margin-bottom:6px;">🍎 IPHONE (SAFARI) INSTANT STEPS:</div>
         <div style="font-size:12px; color:var(--text-primary); line-height:1.5;">
           1. Tap the <strong>Share button (⎋)</strong> at the bottom of Safari.<br/>
           2. Scroll down and select <strong>Add to Home Screen (➕)</strong>.<br/>
@@ -988,7 +930,7 @@
       </div>
 
       <div class="glass-card" style="margin-bottom:14px;">
-        <div style="font-size:12px; font-weight:800; color:var(--cyan); margin-bottom:6px;">🤖 ANDROID (CHROME) STEPS:</div>
+        <div style="font-size:12px; font-weight:800; color:var(--cyan); margin-bottom:6px;">🤖 ANDROID (CHROME) INSTANT STEPS:</div>
         <div style="font-size:12px; color:var(--text-primary); line-height:1.5;">
           Tap the button above, or open Chrome Menu (⋮) -> <strong>Install App</strong> / <strong>Add to Home Screen</strong>.
         </div>
@@ -1103,7 +1045,7 @@
       <div class="glass-card" style="margin-bottom:14px;">
         <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:6px;">App Installation & Backup</div>
         <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-          <button class="chip-btn active" onclick="downloadStandaloneAppFile()">📥 Download Mobile App</button>
+          <button class="chip-btn active" onclick="openInstallModal()">📲 Install Web App</button>
           <button class="chip-btn" onclick="exportDataJSON()">📥 Export JSON</button>
           <button class="chip-btn" onclick="importDataJSON()">📤 Import JSON</button>
           <button class="chip-btn" style="color:var(--priority-high);" onclick="resetToSampleData()">🔄 Reset Data</button>
@@ -1165,7 +1107,7 @@
     updateAmbientTheme();
     setInterval(updateAmbientTheme, 60000);
 
-    // PWA Installation & Detection Engine
+    // Pure PWA Installation Engine
     let deferredPrompt = null;
 
     function checkPWAInstalled() {
@@ -1191,7 +1133,7 @@
     window.addEventListener('appinstalled', () => {
       localStorage.setItem('echo_pwa_installed', 'true');
       checkPWAInstalled();
-      showToast('✦ Echo App Installed on Phone!');
+      showToast('✦ Echo Web App Installed on Home Screen!');
     });
 
     document.addEventListener('DOMContentLoaded', checkPWAInstalled);
@@ -1229,26 +1171,12 @@
         });
       } else {
         document.getElementById('installModal').style.display = 'flex';
-        showToast('💡 Tap Download Offline App or follow steps below!');
+        showToast('💡 Follow instant steps below to add to Home Screen!');
       }
     }
 
-    function downloadStandaloneAppFile() {
-      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Echo_Executive_App.html`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      showToast('📥 Mobile App Executable Package Downloaded!');
-    }
-
     // State Management
-    const STORAGE_KEY = 'echo_app_state_v14';
+    const STORAGE_KEY = 'echo_app_state_v15';
 
     const defaultState = {
       userName: 'Yamini',
@@ -1499,45 +1427,29 @@
       const upcomingItems = state.items.filter(i => i.category !== 'today' && !i.completed);
 
       container.innerHTML = `
+        <!-- Sleek Unified Executive Hero Card -->
         <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(99,102,241,0.18)); border:1px solid var(--card-border-glow); padding:20px;">
-          <div style="font-size:10px; font-weight:900; letter-spacing:1.5px; color:var(--cyan); text-transform:uppercase;">SECOND BRAIN AI OPERATING SYSTEM</div>
-          <div style="font-family:'Outfit', sans-serif; font-size:23px; font-weight:800; color:#fff; margin-top:6px; display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:10px; font-weight:900; letter-spacing:1.5px; color:var(--cyan); text-transform:uppercase;">SECOND BRAIN AI • EXECUTIVE FEED</div>
+            <div style="font-size:11px; font-weight:800; color:var(--emerald);">⚡ Focus: ${energyLevel}%</div>
+          </div>
+          
+          <div style="font-family:'Outfit', sans-serif; font-size:22px; font-weight:800; color:#fff; margin-top:6px; display:flex; align-items:center; justify-content:space-between;">
             <span>${getGreeting()}</span>
             <span style="font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;" onclick="editUserName()" title="Edit Name">✏️ ${state.userName || 'Yamini'}</span>
           </div>
-          <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Structured executive breakdown for today.</div>
-          
-          <button class="tab-btn active" style="padding:10px 16px; font-size:12px; font-weight:800; width:100%; margin-top:12px;" onclick="downloadStandaloneAppFile()">
-            📥 Download Executive Mobile App (.html / PWA)
-          </button>
-        </div>
 
-        <!-- Smart AI Focus Energy Card -->
-        <div class="focus-energy-card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <div style="font-size:10px; font-weight:900; color:var(--cyan); text-transform:uppercase; letter-spacing:1px;">⚡ AI FOCUS ENERGY MODE</div>
-              <div style="font-size:14px; font-weight:800; color:#fff; margin-top:2px;">Daily Peak Capacity: ${energyLevel}%</div>
-            </div>
-            <div style="font-size:20px;">⚡</div>
+          <!-- Integrated AI Natural Input Input Bar -->
+          <div class="quick-input-row">
+            <input type="text" id="quickAddInput" class="quick-input-field" placeholder="e.g. 'Meeting on 15th Aug 10:00 AM'" onkeydown="if(event.key==='Enter') quickAddTaskFromInput()" />
+            <button class="quick-add-btn" onclick="quickAddTaskFromInput()">+ Add Task</button>
           </div>
-          <div class="energy-bar-track">
-            <div class="energy-bar-fill" style="width: ${energyLevel}%;"></div>
-          </div>
-          <div class="timeline-chips" style="margin-top:12px;">
+
+          <div class="timeline-chips" style="margin-top:14px;">
             <button class="chip-btn ${ef === 'all' ? 'active' : ''}" onclick="setEnergyFilter('all')">All Focus</button>
             <button class="chip-btn ${ef === 'highFocus' ? 'active' : ''}" onclick="setEnergyFilter('highFocus')">🎯 High Focus</button>
             <button class="chip-btn ${ef === 'quickWins' ? 'active' : ''}" onclick="setEnergyFilter('quickWins')">⚡ Quick Wins</button>
             <button class="chip-btn ${ef === 'meetings' ? 'active' : ''}" onclick="setEnergyFilter('meetings')">🤝 Meetings</button>
-          </div>
-        </div>
-
-        <!-- Quick AI Natural Input Bar -->
-        <div class="quick-input-card">
-          <div style="font-size:10px; font-weight:800; color:var(--cyan); text-transform:uppercase; margin-bottom:8px; letter-spacing:1px;">✨ QUICK AI NATURAL INPUT</div>
-          <div class="quick-input-row">
-            <input type="text" id="quickAddInput" class="quick-input-field" placeholder="e.g. 'Meeting on 15th Aug 10:00 AM'" onkeydown="if(event.key==='Enter') quickAddTaskFromInput()" />
-            <button class="quick-add-btn" onclick="quickAddTaskFromInput()">+ Add Task</button>
           </div>
         </div>
 
@@ -1554,10 +1466,6 @@
         <div class="section-title">
           <span>Today's Tasks & Priorities</span>
           <span style="font-size:12px; color:var(--text-secondary);">${state.items.filter(i => i.category === 'today' && i.completed).length}/${state.items.filter(i => i.category === 'today').length} Done</span>
-        </div>
-
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          💡 <em>Tip: Swipe task card right to complete ✓ | Swipe left to delete 🗑️</em>
         </div>
 
         ${todayTasks.length === 0 ? `
@@ -1586,14 +1494,6 @@
     function setEnergyFilter(filter) {
       state.energyFilter = filter;
       render();
-    }
-
-    function focusQuickAdd() {
-      switchView('dashboard');
-      setTimeout(() => {
-        const input = document.getElementById('quickAddInput');
-        if (input) { input.focus(); input.scrollIntoView({ behavior: 'smooth' }); }
-      }, 100);
     }
 
     function renderTaskCard(item) {
